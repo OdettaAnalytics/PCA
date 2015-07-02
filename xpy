@@ -196,6 +196,8 @@ if (opts.legend):
 		loc = 0
 	py.legend(names,loc=loc)
 
-if opts.ofile: py.savefig(opts.ofile)
-py.show()
+if opts.ofile: 
+   py.savefig(opts.ofile)
+else:
+   py.show()
 

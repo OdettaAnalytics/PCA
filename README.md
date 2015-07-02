@@ -1,1 +1,4 @@
-# principal component analysis - leonliang10 06/30/2015
+#
+# Component for data classification and processing using 
+# Principle Component Analysis
+#

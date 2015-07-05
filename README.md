@@ -1,1 +1,3 @@
-# principal component analysis - leonliang10 06/30/2015
+# principal component analysis
+
+python data_rebinning.py [filename] [rebin factor]

@@ -99,20 +99,37 @@ n = len(args)
 
 xcol = []
 ycol = []
+names = None
 if (opts.cols):
    col_plot = opts.cols.split(',')
-   for cp in col_plot:
-      cols =  cp.split(':')
-      if len(cols) != 2:
-         print "must specify columns like so.. python xpy <filenames> -x 1:2,1:3"
-         sys.exit() 
-      if (n > 1) and (len(col_plot)==1):
-         # assume the same columns for all files
-         xcol = [int(cols[0]) - 1]*n
-         ycol = [int(cols[1]) - 1]*n
-      else:
-         xcol.append(int(cols[0]) - 1)
-         ycol.append(int(cols[1]) - 1)
+   if len(col_plot) > 1 and n == 1:
+      # plot multiple columns for a single file
+      n = len(col_plot)
+      args = args*n
+      names = [ "Col %d" % d for d in range(1,n+1) ]
+      loc = 0
+   elif len(col_plot) == 1 and n == 1 and col_plot[0]=="all":
+      data = np.loadtxt(args[0])
+      n = len(data[0, :])-1
+      args = args*n
+      xcol = [0]*n
+      ycol = range(1, n+1)
+      names = [ "Col %d" % d for d in range(1,n+1) ]
+      loc = 0
+   else:
+      for cp in col_plot:
+         cols =  cp.split(':')
+         if len(cols) != 2:
+            print "must specify columns like so.. python xpy <filenames> -x 1:2,1:3"
+            sys.exit() 
+
+         if (n > 1) and (len(col_plot)==1):
+            # assume the same columns for all files
+            xcol = [int(cols[0]) - 1]*n
+            ycol = [int(cols[1]) - 1]*n
+         else:
+            xcol.append(int(cols[0]) - 1)
+            ycol.append(int(cols[1]) - 1)
 else:
    xcol = [0]*n
    ycol = [1]*n
@@ -190,11 +207,14 @@ if (opts.legend):
 	names = args
    else: 
 	names = opts.legend.split(',')
-   	if (opts.legendloc):
-		loc = np.int(opts.legendloc)
-	else:
-		loc = 0
-	py.legend(names,loc=loc)
+
+   if (opts.legendloc):
+	loc = np.int(opts.legendloc)
+   else:
+	loc = 0
+
+if names:
+   py.legend(names,loc=loc)
 
 if opts.ofile: 
    py.savefig(opts.ofile)

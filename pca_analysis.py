@@ -110,8 +110,8 @@ U_reduced, coeffs_reduced = reducing_PCA(n, U, rebinned_data)
 model = plotting(U_reduced, coeffs_reduced, mu)
 
 datapoints = coefficients[:2, :].T
-f = open(pcomp_name, 'a')
-np.savetxt(f,datapoints)
+f = open(pcomp_name, 'w')
+np.savetxt(f, datapoints)
 f.close()
 # PCA coefficients
 # need to plot these to see coeff components

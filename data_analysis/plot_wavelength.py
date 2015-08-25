@@ -16,7 +16,6 @@ Addition option include:
 '''
 
 import numpy as np
-import matplotlib.pyplot as plt
 import optparse
 import sys
 
@@ -119,6 +118,7 @@ def gen_save_to_all_txt(data_list, min_wavelength, max_wavelength, func_call=Fal
 		print 'Saved minimum and maximum wavelength text file to type_all/plots/wavelength/all_min_max_wavelengths.txt'
 
 def plotting(data_list, min_wavelength, max_wavelength, plot_all, show_plots, save_plots):
+	import matplotlib.pyplot as plt
 	if (plot_all):
 		print 'Plotting all supernovae types into one'
 	else:

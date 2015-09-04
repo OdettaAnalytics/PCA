@@ -17,6 +17,7 @@ Addition option include:
 
 import numpy as np
 import optparse
+import glob
 import sys
 
 def extract_z_values(object_z_file):
@@ -30,14 +31,26 @@ def extract_z_values(object_z_file):
 
 	return object_names, z_values
 
-def find_min_max_wavelengths(data_list, objects, z_values):
-	data_names = np.genfromtxt(data_list, dtype='str')
-	[num_files, ] = data_names.shape
+def dir_location():
+	data_dir = glob.glob('supernova_data/type*/data/*')
+	num_files = len(data_dir)
+	dir_depth = len(data_dir[0].split('/'))
+	data_list = np.empty([num_files, dir_depth], dtype='a16')
+	index = 0
+	for data in data_dir:
+		data_list[index, :] = data.split('/')
+		index += 1
+	data_dir = np.array(data_dir)
+	return data_dir, data_list
+
+def find_min_max_wavelengths(data_dir, objects, z_values):
+	# data_names = np.genfromtxt(data_list, dtype='str')
+	[num_files, ] = data_dir.shape
 	max_wavelength = np.zeros(num_files)
 	min_wavelength = np.zeros(num_files)
 
 	for i in range(num_files):
-		spectrum = np.loadtxt(data_names[i])
+		spectrum = np.loadtxt(data_dir[i])
 		wavelength = spectrum[:, 0]
 		max_wavelength[i] = max(wavelength)
 		min_wavelength[i] = min(wavelength)
@@ -48,7 +61,7 @@ def find_min_max_wavelengths(data_list, objects, z_values):
 	# num_z_missed = 0
 	for i in range(num_files):
 		for j in range(num_objects):
-			if (data_names[i].find(objects[j]) != -1):
+			if (data_dir[i].find(objects[j]) != -1):
 				max_wavelength[i] = max_wavelength[i]/(1+z_values[j])
 				num_z_found = num_z_found + 1
 				break
@@ -71,9 +84,9 @@ def filter_types(types):
 	return unique_types, change_point
 
 def gen_save_txt(data_list, min_wavelength, max_wavelength):
-	data_file_names = np.genfromtxt(data_list, dtype='str', delimiter='/')
-	[rows, dir_depth] = data_file_names.shape
-	types = data_file_names[:, 0]
+	# data_file_names = np.genfromtxt(data_list, dtype='str', delimiter='/')
+	[rows, dir_depth] = data_list.shape
+	types = data_list[:, 1]
 	# names = data_file_names[:, dir_depth -1 ]
 	[unique_types, change_point] = filter_types(types)
 	[num_types, ] = unique_types.shape
@@ -81,20 +94,20 @@ def gen_save_txt(data_list, min_wavelength, max_wavelength):
 		start = change_point[i]
 		end = change_point[i + 1]
 		if (end):
-			gen_save_to_all_txt(data_file_names[start:end], min_wavelength[start:end], max_wavelength[start:end], func_call=True)
+			gen_save_to_all_txt(data_list[start:end], min_wavelength[start:end], max_wavelength[start:end], func_call=True)
 		else:
-			gen_save_to_all_txt(data_file_names[start:], min_wavelength[start:], max_wavelength[start:], func_call=True)
+			gen_save_to_all_txt(data_list[start:], min_wavelength[start:], max_wavelength[start:], func_call=True)
 
 
 def gen_save_to_all_txt(data_list, min_wavelength, max_wavelength, func_call=False):
-	if (func_call):
-		data_file_names = data_list
-	else:
-		data_file_names = np.genfromtxt(data_list, dtype='str', delimiter='/')
+	# if (func_call):
+	# 	data_file_names = data_list
+	# else:
+	# 	data_file_names = np.genfromtxt(data_list, dtype='str', delimiter='/')
 
-	[rows, dir_depth] = data_file_names.shape
-	types = data_file_names[:, 0]
-	names = data_file_names[:, dir_depth -1 ]
+	[rows, dir_depth] = data_list.shape
+	types = data_list[:, 1]
+	names = data_list[:, dir_depth - 1]
 	wavelengths = np.vstack([types, names, min_wavelength, max_wavelength]).T
 
 	labels = np.empty([1, 4], dtype='a16')
@@ -104,14 +117,14 @@ def gen_save_to_all_txt(data_list, min_wavelength, max_wavelength, func_call=Fal
 	labels[0, 3] = 'max_wavelength'
 
 	if (func_call):
-		wavelengths_txt = types[0] + '/plots/wavelength/min_max_wavelengths.txt'
+		wavelengths_txt = 'supernova_data/' + types[0] + '/plots/wavelength/min_max_wavelengths.txt'
 		f = open(wavelengths_txt, 'w')
 		np.savetxt(f, labels,  delimiter='\t', fmt="%s \t %s \t %s \t %s")
 		np.savetxt(f, wavelengths, delimiter="\t", fmt="%s \t %s \t %s \t %s")
 		f.close()
 		print 'Saved minimum and maximum wavelength text file to ' + wavelengths_txt
 	else:
-		f = open('type_all/plots/wavelength/all_min_max_wavelengths.txt', 'w')
+		f = open('supernova_data/type_all/plots/wavelength/all_min_max_wavelengths.txt', 'w')
 		np.savetxt(f, labels, delimiter='\t', fmt="%s \t %s \t %s \t %s"    )
 		np.savetxt(f, wavelengths, fmt="%s \t %s \t %s \t %s")
 		f.close()
@@ -142,17 +155,17 @@ def plotting(data_list, min_wavelength, max_wavelength, plot_all, show_plots, sa
 		plt.xlabel("Wavelengths")
 		plt.ylabel("Number of Spectra")
 		if (save_plots):
-			plot_name = 'type_all/plots/wavelength/all_min_max_wavelengths.eps'
+			plot_name = 'supernova_data/type_all/plots/wavelength/all_min_max_wavelengths.eps'
 			plt.savefig(plot_name, format='eps', dpi=3500)
-			print 'Saving plot as: type_all/plots/wavelength/all_min_max_wavelengths.eps'
+			print 'Saving plot as: ' + plot_name
 		if (show_plots):
 			plt.show()
 
 	else:
-		data_file_names = np.genfromtxt(data_list, dtype='str', delimiter='/')
-		[rows, dir_depth] = data_file_names.shape
-		types = data_file_names[:, 0]
-		names = data_file_names[:, dir_depth -1 ]
+		# data_file_names = np.genfromtxt(data_list, dtype='str', delimiter='/')
+		[rows, dir_depth] = data_list.shape
+		types = data_list[:, 1]
+		names = data_list[:, dir_depth -1 ]
 		[unique_types, change_point] = filter_types(types)
 		[num_types, ] = unique_types.shape
 		for i in range(num_types):
@@ -178,7 +191,7 @@ def plotting(data_list, min_wavelength, max_wavelength, plot_all, show_plots, sa
 			plt.xlabel("Wavelengths")
 			plt.ylabel("Number of Spectra")
 			if (save_plots):
-				plot_name = types[start] + '/plots/wavelength/min_max_wavelengths.eps'
+				plot_name = 'supernova_data/' + types[start] + '/plots/wavelength/min_max_wavelengths.eps'
 				plt.savefig(plot_name, format='eps', dpi=3500)
 				print 'Saving plots as: ' + plot_name
 			if (show_plots):
@@ -233,18 +246,19 @@ else:
 
 num_args = len(args)
 
-if (num_args != 2):
-	print 'Please enter the valid file names: [data list] [object and z file]'
+if (num_args != 1):
+	print 'Please enter the valid file name: [object and z file]'
 	sys.exit()
-data_list = args[0]
-object_z_file = args[1]
+# data_list = args[0]
+object_z_file = args[0]
 
 
 
 
 
 [objects, z_values] = extract_z_values(object_z_file)
-[min_wavelength, max_wavelength] = find_min_max_wavelengths(data_list, objects, z_values)
+data_dir, data_list = dir_location()
+[min_wavelength, max_wavelength] = find_min_max_wavelengths(data_dir, objects, z_values)
 if (plot_all):
 	gen_save_to_all_txt(data_list, min_wavelength, max_wavelength)
 else:

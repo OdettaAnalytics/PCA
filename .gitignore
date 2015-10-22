@@ -7,4 +7,4 @@ WiseRep/objects_z_values.txt
 WiseRep/data_list.txt
 WiseRep/supernovae_info.txt
 WiseRep/download_data.sh
-
+*.pyc*

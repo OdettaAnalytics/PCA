@@ -3,7 +3,7 @@ import get_data
 
 
 def get_object_z_values():
-	return glob.glob('objects_z_values*')[0]
+	return glob.glob('supernova_data/objects_z_values*')[0]
 
 def extract_z_values(object_z_file):
 	object_zvalues = np.genfromtxt(object_z_file, dtype='str')

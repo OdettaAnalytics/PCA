@@ -31,6 +31,3 @@ def convert_HDF5():
 
 if __name__ == '__main__':
 	convert_HDF5()
-
-
-

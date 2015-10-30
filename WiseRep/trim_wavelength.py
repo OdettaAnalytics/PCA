@@ -4,8 +4,8 @@ import glob
 import sys
 
 def trim_wavelength(min_wave, max_wave):
-	data_dir = glob.glob('supernova_data/type*/deredshift_data/*')
-	for data in data_dir:
+	dataset = glob.glob('supernova_data/type*/deredshift_data/*')
+	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:,0]
 		if (min(wavelength) > min_wave):

@@ -32,25 +32,25 @@ def extract_z_values(object_z_file):
 	return object_names, z_values
 
 def dir_location():
-	data_dir = glob.glob('supernova_data/type*/raw_data/*')
-	num_files = len(data_dir)
-	dir_depth = len(data_dir[0].split('/'))
+	dataset = glob.glob('supernova_data/type*/raw_data/*')
+	num_files = len(dataset)
+	dir_depth = len(dataset[0].split('/'))
 	data_list = np.empty([num_files, dir_depth], dtype='a16')
 	index = 0
-	for data in data_dir:
+	for data in dataset:
 		data_list[index, :] = data.split('/')
 		index += 1
-	data_dir = np.array(data_dir)
-	return data_dir, data_list
+	dataset = np.array(dataset)
+	return dataset, data_list
 
-def find_min_max_wavelengths(data_dir, objects, z_values):
+def find_min_max_wavelengths(dataset, objects, z_values):
 	# data_names = np.genfromtxt(data_list, dtype='str')
-	[num_files, ] = data_dir.shape
+	[num_files, ] = dataset.shape
 	max_wavelength = np.zeros(num_files)
 	min_wavelength = np.zeros(num_files)
 
 	for i in range(num_files):
-		spectrum = np.loadtxt(data_dir[i])
+		spectrum = np.loadtxt(dataset[i])
 		wavelength = spectrum[:, 0]
 		max_wavelength[i] = max(wavelength)
 		min_wavelength[i] = min(wavelength)
@@ -61,7 +61,7 @@ def find_min_max_wavelengths(data_dir, objects, z_values):
 	# num_z_missed = 0
 	for i in range(num_files):
 		for j in range(num_objects):
-			if (data_dir[i].find(objects[j]) != -1):
+			if (dataset[i].find(objects[j]) != -1):
 				max_wavelength[i] = max_wavelength[i]/(1+z_values[j])
 				# num_z_found = num_z_found + 1
 				break
@@ -257,8 +257,8 @@ object_z_file = args[0]
 
 
 [objects, z_values] = extract_z_values(object_z_file)
-data_dir, data_list = dir_location()
-[min_wavelength, max_wavelength] = find_min_max_wavelengths(data_dir, objects, z_values)
+dataset, data_list = dir_location()
+[min_wavelength, max_wavelength] = find_min_max_wavelengths(dataset, objects, z_values)
 if (plot_all):
 	gen_save_to_all_txt(data_list, min_wavelength, max_wavelength)
 else:

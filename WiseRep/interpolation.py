@@ -7,10 +7,10 @@ import sys
 import optparse
 
 def interpolation(min_wave, max_wave):
-	data_dir = get_data_dir()
+	dataset = get_data_dir()
 	f_x = []
 	num_points = []
-	for data in data_dir:
+	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:,0]
 		flux = spectrum[:,1]
@@ -25,9 +25,9 @@ def get_data_dir():
 
 def log_rebinning(min_wave, max_wave):
 	f_x, num_points = interpolation(min_wave, max_wave)
-	data_dir = get_data_dir()
+	dataset = get_data_dir()
 	index = 0
-	for data in data_dir:
+	for data in dataset:
 		num_waves = num_points[index]
 		new_wavelength = np.logspace(np.log10(min_wave), np.log10(max_wave), num=num_waves, endpoint=False)
 		f = f_x[index]
@@ -46,9 +46,9 @@ def log_rebinning(min_wave, max_wave):
 
 def linear_rebinning(min_wave, max_wave):
 	f_x, num_points = interpolation(min_wave, max_wave)
-	data_dir = get_data_dir()
+	dataset = get_data_dir()
 	index = 0
-	for data in data_dir:
+	for data in dataset:
 		num_waves = num_points[index]
 		new_wavelength = np.linspace(min_wave, max_wave, num=num_waves, endpoint=False)
 		f = f_x[index]

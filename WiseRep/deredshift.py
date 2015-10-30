@@ -21,10 +21,10 @@ def extract_z_values(object_z_file):
 	return object_names, z_values
 
 def deredshift():
-	data_dir = get_data_dir()
+	dataset = get_data_dir()
 	object_z_file = get_object_z_values()
 	object_names, z_values = extract_z_values(object_z_file)
-	for data in data_dir:
+	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:, 0]
 		rest_of_spectrum = spectrum[:, 1:]

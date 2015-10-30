@@ -23,3 +23,11 @@ def hdf5():
 
 def all_hdf5():
 	return glob.glob('supernova_data/type_all/hdf5_data/*')
+
+def types(type_all=False):
+	if type_all:
+		return glob.glob('supernova_data/type*')
+	else:
+		types = glob.glob('supernova_data/type*')
+		types.remove('supernova_data/type_all')
+		return types

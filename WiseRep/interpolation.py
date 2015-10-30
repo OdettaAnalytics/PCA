@@ -14,6 +14,8 @@ def interpolation(min_wave, max_wave):
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:,0]
 		flux = spectrum[:,1]
+		wavelength = wavelength[np.where(wavelength)]
+		flux = flux[np.where(wavelength)]
 		[num_waves,] = wavelength.shape
 		f = interpolate.interp1d(wavelength, flux, bounds_error=False, fill_value=0)
 		f_x.append(f)

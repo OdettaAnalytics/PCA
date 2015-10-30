@@ -1,10 +1,6 @@
-import numpy as np
-import os, os.path
-import glob
-import sys
+import numpy as np, os, os.path
+import get_data
 
-def get_data_dir():
-	return glob.glob('supernova_data/type*/trimmed_data/*')
 
 def demeaning(flux):
 	mean = np.mean(flux)
@@ -12,7 +8,7 @@ def demeaning(flux):
 	return demeaned_flux
 
 def demean_flux():
-	dataset = get_data_dir()
+	dataset = get_data.trimmed()
 	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:, 0]

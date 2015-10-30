@@ -1,10 +1,9 @@
-import numpy as np 
-import os, os.path
-import glob
-import sys
+import numpy as np, os, os.path, sys
+import get_data
+
 
 def trim_wavelength(min_wave, max_wave):
-	dataset = glob.glob('supernova_data/type*/deredshift_data/*')
+	dataset = get_data.deredshift()
 	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:,0]

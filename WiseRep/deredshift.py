@@ -1,10 +1,6 @@
-import  numpy as np
-import os, os.path
-import glob
-import sys
+import  numpy as np, os, os.path, sys, glob
+import get_data
 
-def get_data_dir():
-	return glob.glob('supernova_data/type*/raw_data/*')
 
 def get_object_z_values():
 	return glob.glob('objects_z_values*')[0]
@@ -21,7 +17,7 @@ def extract_z_values(object_z_file):
 	return object_names, z_values
 
 def deredshift():
-	dataset = get_data_dir()
+	dataset = get_data.raw()
 	object_z_file = get_object_z_values()
 	object_names, z_values = extract_z_values(object_z_file)
 	for data in dataset:

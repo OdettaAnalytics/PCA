@@ -1,10 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import interpolate
-import os, os.path
-import glob
-import sys
-import optparse
+import os, os.path, glob, sys, optparse
+import get_data
 
 def interpolation(min_wave, max_wave):
 	dataset = get_data_dir()
@@ -22,12 +20,9 @@ def interpolation(min_wave, max_wave):
 		num_points.append(num_waves)
 	return f_x, num_points
 
-def get_data_dir():
-	return glob.glob('supernova_data/type*/demeaned_data/*')
-
 def log_rebinning(min_wave, max_wave):
 	f_x, num_points = interpolation(min_wave, max_wave)
-	dataset = get_data_dir()
+	dataset = get_data.demeaned()
 	index = 0
 	for data in dataset:
 		num_waves = num_points[index]
@@ -48,7 +43,7 @@ def log_rebinning(min_wave, max_wave):
 
 def linear_rebinning(min_wave, max_wave):
 	f_x, num_points = interpolation(min_wave, max_wave)
-	dataset = get_data_dir()
+	dataset = get_data.demeaned()
 	index = 0
 	for data in dataset:
 		num_waves = num_points[index]

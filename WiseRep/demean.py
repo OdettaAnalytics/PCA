@@ -12,8 +12,8 @@ def demeaning(flux):
 	return demeaned_flux
 
 def demean_flux():
-	data_dir = get_data_dir()
-	for data in data_dir:
+	dataset = get_data_dir()
+	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:, 0]
 		flux = spectrum[:, 1]

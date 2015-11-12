@@ -17,13 +17,13 @@ def convert_HDF5():
 	all_types = get_data.types(type_all=True)
 	create_File(all_types)
 	dataset = get_data.log()
-	for data in dataset:
-		data_str = data.split('/')
+	for d in dataset:
+		data_str = d.split('/')
 		data_type = data_str[1]
 		data_name = data_str[3]
 		data_file = h5py.File('supernova_data/' + data_type + '/hdf5/' + data_type + '.hdf5', 'a')
 		data_file_all = h5py.File('supernova_data/type_all/hdf5/type_all.hdf5', 'a')
-		spectrum = np.loadtxt(data)
+		spectrum = np.loadtxt(d)
 		data_file.create_dataset(data_name, data=spectrum)
 		data_file_all.create_dataset(data_type + ':' + data_name + '.hdf5', data=spectrum)
 		data_file_all.close()

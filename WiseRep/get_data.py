@@ -40,7 +40,7 @@ def hdf5(category = None):
 	if category is not None:
 		return glob.glob(category + '/hdf5_data/*')
 	else:
-		return glob.glob('supernova_data/type*/demeaned_data/*')
+		return glob.glob('supernova_data/type*/hdf5_data/*')
 
 
 def all_hdf5(category = None):

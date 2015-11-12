@@ -5,9 +5,9 @@ import os, os.path, glob, sys, optparse
 import get_data
 
 def interpolation(min_wave, max_wave):
-	dataset = get_data_dir()
-	f_x = []
-	num_points = []
+	dataset = get_data.demeaned()
+	f_x = {}
+	# num_points = []
 	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:,0]
@@ -16,18 +16,18 @@ def interpolation(min_wave, max_wave):
 		flux = flux[np.where(wavelength)]
 		[num_waves,] = wavelength.shape
 		f = interpolate.interp1d(wavelength, flux, bounds_error=False, fill_value=0)
-		f_x.append(f)
-		num_points.append(num_waves)
-	return f_x, num_points
+		f_x[data] = f
+		# num_points.append(num_waves)
+	return f_x #, num_points
 
-def log_rebinning(min_wave, max_wave):
-	f_x, num_points = interpolation(min_wave, max_wave)
+def log_rebinning(min_wave, max_wave, N):
+	f_x = interpolation(min_wave, max_wave)
 	dataset = get_data.demeaned()
-	index = 0
+	# index = 0
 	for data in dataset:
-		num_waves = num_points[index]
+		num_waves = N #num_points[index]
 		new_wavelength = np.logspace(np.log10(min_wave), np.log10(max_wave), num=num_waves, endpoint=False)
-		f = f_x[index]
+		f = f_x[data]
 		new_flux = f(new_wavelength)
 		new_rebin_data = np.vstack([new_wavelength, new_flux]).T
 		data_str = data.split('/')
@@ -38,17 +38,17 @@ def log_rebinning(min_wave, max_wave):
 		rebin_new_wavelength_dir = 'supernova_data/' + data_type + '/log_rebin_data/' + data_name
 		np.savetxt(rebin_new_wavelength_dir, new_rebin_data, delimiter='\t')
 		print 'Rebinned data saved to ' + rebin_new_wavelength_dir
-		index += 1
+		# index += 1
 	return None
 
-def linear_rebinning(min_wave, max_wave):
-	f_x, num_points = interpolation(min_wave, max_wave)
+def linear_rebinning(min_wave, max_wave, N):
+	f_x = interpolation(min_wave, max_wave)
 	dataset = get_data.demeaned()
-	index = 0
+	# index = 0
 	for data in dataset:
-		num_waves = num_points[index]
+		num_waves = N #num_points[index]
 		new_wavelength = np.linspace(min_wave, max_wave, num=num_waves, endpoint=False)
-		f = f_x[index]
+		f = f_x[data]
 		new_flux = f(new_wavelength)
 		new_rebin_data = np.vstack([new_wavelength, new_flux]).T
 		data_str = data.split('/')
@@ -59,14 +59,8 @@ def linear_rebinning(min_wave, max_wave):
 		rebin_new_wavelength_dir = 'supernova_data/' + data_type + '/linear_rebin_data/' + data_name
 		np.savetxt(rebin_new_wavelength_dir, new_rebin_data, delimiter='\t')
 		print 'Rebinned data saved to ' + rebin_new_wavelength_dir
-		index += 1
+		# index += 1
 	return None
-
-# if __name__ == '__main__':
-# 	min_wave = 4000
-# 	max_wave = 8000
-# 	interpolation(min_wave, max_wave)
-# 	rebinning(min_wave, max_wave)
 
 parser = optparse.OptionParser()
 parser.add_option("--rebin",dest="rebin")
@@ -94,11 +88,11 @@ if (linear):
 
 min_wave = 4000
 max_wave = 8000
-# interpolation(min_wave, max_wave)
+N = 2000
 if (log):
-	log_rebinning(min_wave, max_wave)
+	log_rebinning(min_wave, max_wave, N)
 if (linear):
-	linear_rebinning(min_wave, max_wave)
+	linear_rebinning(min_wave, max_wave, N)
 
 
 

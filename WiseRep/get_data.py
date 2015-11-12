@@ -2,43 +2,43 @@ import glob
 
 def trimmed(category = None):
 	if category is not None:
-		return glob.glob('supernova_data/' + category + '/trimmed_data/*')
+		return glob.glob(category + '/trimmed_data/*')
 	else:
 		return glob.glob('supernova_data/type*/trimmed_data/*')
 
 def demeaned(category = None):
 	if category is not None:
-		return glob.glob('supernova_data/' + category + '/demeaned_data/*')
+		return glob.glob(category + '/demeaned_data/*')
 	else:
 		return glob.glob('supernova_data/type*/demeaned_data/*')
 
 def deredshift(category = None):
 	if category is not None:
-		return glob.glob('supernova_data/' + category + '/deredshift_data/*')
+		return glob.glob(category + '/deredshift_data/*')
 	else:
 		return glob.glob('supernova_data/type*/deredshift_data/*')
 
 def raw(category = None):
 	if category is not None:
-		return glob.glob('supernova_data/' + category + '/raw_data/*')
+		return glob.glob(category + '/raw_data/*')
 	else:
 		return glob.glob('supernova_data/type*/raw_data/*')
 
 def linear(category = None):
 	if category is not None:
-		return glob.glob('supernova_data/' + category + '/linear_rebin_data/*')
+		return glob.glob(category + '/linear_rebin_data/*')
 	else:
 		return glob.glob('supernova_data/type*/linear_rebin_data/*')
 
 def log(category = None):
 	if category is not None:
-		return glob.glob('supernova_data/' + category + '/log_rebin_data/*')
+		return glob.glob(category + '/log_rebin_data/*')
 	else:
 		return glob.glob('supernova_data/type*/log_rebin_data/*')
 
 def hdf5(category = None):
 	if category is not None:
-		return glob.glob('supernova_data/' + category + '/hdf5_data/*')
+		return glob.glob(category + '/hdf5_data/*')
 	else:
 		return glob.glob('supernova_data/type*/demeaned_data/*')
 

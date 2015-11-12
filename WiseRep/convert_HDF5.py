@@ -14,9 +14,9 @@ def create_File(all_types):
 		f.close()
 
 def convert_HDF5():
-	all_types = get_data.types(True)
+	all_types = get_data.types(type_all=True)
 	create_File(all_types)
-	dataset = get_data.demeaned()
+	dataset = get_data.log()
 	for data in dataset:
 		data_str = data.split('/')
 		data_type = data_str[1]
@@ -26,8 +26,8 @@ def convert_HDF5():
 		spectrum = np.loadtxt(data)
 		data_file.create_dataset(data_name, data=spectrum)
 		data_file_all.create_dataset(data_type + ':' + data_name + '.hdf5', data=spectrum)
-		data_file.close()
 		data_file_all.close()
-
+		data_file.close()
+		
 if __name__ == '__main__':
 	convert_HDF5()

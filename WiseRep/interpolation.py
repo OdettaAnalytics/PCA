@@ -7,7 +7,6 @@ import get_data
 def interpolation(min_wave, max_wave):
 	dataset = get_data.demeaned()
 	f_x = {}
-	# num_points = []
 	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:,0]
@@ -17,15 +16,13 @@ def interpolation(min_wave, max_wave):
 		[num_waves,] = wavelength.shape
 		f = interpolate.interp1d(wavelength, flux, bounds_error=False, fill_value=0)
 		f_x[data] = f
-		# num_points.append(num_waves)
-	return f_x #, num_points
+	return f_x
 
 def log_rebinning(min_wave, max_wave, N):
 	f_x = interpolation(min_wave, max_wave)
 	dataset = get_data.demeaned()
-	# index = 0
 	for data in dataset:
-		num_waves = N #num_points[index]
+		num_waves = N
 		new_wavelength = np.logspace(np.log10(min_wave), np.log10(max_wave), num=num_waves, endpoint=False)
 		f = f_x[data]
 		new_flux = f(new_wavelength)
@@ -44,9 +41,8 @@ def log_rebinning(min_wave, max_wave, N):
 def linear_rebinning(min_wave, max_wave, N):
 	f_x = interpolation(min_wave, max_wave)
 	dataset = get_data.demeaned()
-	# index = 0
 	for data in dataset:
-		num_waves = N #num_points[index]
+		num_waves = N
 		new_wavelength = np.linspace(min_wave, max_wave, num=num_waves, endpoint=False)
 		f = f_x[data]
 		new_flux = f(new_wavelength)
@@ -59,7 +55,6 @@ def linear_rebinning(min_wave, max_wave, N):
 		rebin_new_wavelength_dir = 'supernova_data/' + data_type + '/linear_rebin_data/' + data_name
 		np.savetxt(rebin_new_wavelength_dir, new_rebin_data, delimiter='\t')
 		print 'Rebinned data saved to ' + rebin_new_wavelength_dir
-		# index += 1
 	return None
 
 parser = optparse.OptionParser()

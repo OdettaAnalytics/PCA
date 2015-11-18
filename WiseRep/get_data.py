@@ -45,6 +45,7 @@ def hdf5(category = None):
 
 def all_hdf5(category = None):
 	return glob.glob('supernova_data/type_all/hdf5_data/*')
+	# return glob.glob('test.hdf5')
 
 def types(category = None, data_type = None, type_all=False):
 	if category is not None:

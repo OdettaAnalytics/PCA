@@ -8,3 +8,4 @@ WiseRep/data_list.txt
 WiseRep/supernovae_info.txt
 WiseRep/download_data.sh
 *.pyc*
+WiseRep/test.hdf5

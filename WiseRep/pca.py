@@ -10,7 +10,7 @@ def form_matrix(category = None):
 	if category is not None:
 		dataset = get_data.hdf5(category)
 	else:
-		dataset = get_data.all_hdg5()
+		dataset = get_data.hdf5()
 	data_matrix = {}
 	for data in dataset:
 		data_mat = {}
@@ -120,7 +120,7 @@ def reduce_pca(data_matrix, n):
 		data_matrix[data_type]['svd']['U_reduced'] = U_reduced
 		data_matrix[data_type]['coefficients']['reduced'] = coefficients_reduced
 
-category = 'type_IIb'
+category = 'type_all'
 data_matrix = form_matrix(category)
 normalize(data_matrix)
 demean(data_matrix)
@@ -163,7 +163,7 @@ plt.show()
 c1 = coefficients_reduced[0,:]
 c2 = coefficients_reduced[1,:]
 c3 = coefficients_reduced[2,:]
-# # c4 = coefficients_reduced[3,:]
+# c4 = coefficients_reduced[3,:]
 # c5 = coefficients_reduced[4,:]
 
 plt.scatter(c1, c2, color='blue')
@@ -171,8 +171,43 @@ plt.scatter(c1, c3, color='red')
 # plt.scatter(c1, c4, color='green')
 plt.scatter(c2, c3, color='black')
 # plt.scatter(c2, c4, color='pink')
-# plt.scatter(c3, c4, color='yellow')
+# plt.scatter(c3, c4, color='purple')
 
 plt.show()
+
+
+# For testing solutions with all data_type
+colors = ['blue', 'red', 'pink', 'orange', 'green', 'purple', 'black']
+plots = []
+plotNames = []
+i = 0
+for data_type in data_matrix:
+	print 'plotting ' + str(data_type)
+	coefficients = data_matrix[data_type]['coefficients']['normal']
+	coefficients_reduced = data_matrix[data_type]['coefficients']['reduced']
+	U = data_matrix[data_type]['svd']['U']
+	S = data_matrix[data_type]['svd']['S']
+	V = data_matrix[data_type]['svd']['V']
+	wavelength = data_matrix[data_type]['wavelength']
+	flux = data_matrix[data_type]['flux']
+	U_reduced = data_matrix[data_type]['svd']['U_reduced']
+
+	K = (U.dot(coefficients)).T
+	K_reduce = (U_reduced.dot(coefficients_reduced)).T
+	c1 = coefficients_reduced[0,:]
+	c2 = coefficients_reduced[0,:]
+	p = plt.scatter(c1, c2, color=colors[i], label=data_type)
+	plots.append(p)
+	plotNames.append(data_type)
+	plt.xlabel('c1')
+	plt.ylabel('c1')
+	i += 1
+
+
+plt.legend(plots, plotNames)
+plt.show()
+
+
+
 
 

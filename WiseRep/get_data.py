@@ -36,11 +36,17 @@ def log(category = None):
 	else:
 		return glob.glob('supernova_data/type*/log_rebin_data/*')
 
-def hdf5(category = None):
+def hdf5(category = None, type_all=False):
 	if category is not None:
 		return glob.glob('supernova_data/' + category + '/hdf5_data/*')
 	else:
-		return glob.glob('supernova_data/type*/hdf5_data/*')
+		if type_all:
+			return glob.glob('supernova_data/type*/hdf5_data/*')
+		else:
+			types = glob.glob('supernova_data/type*/hdf5_data/*')
+			types.remove('supernova_data/type_all/hdf5_data/type_all.hdf5')
+			return types
+
 
 
 def all_hdf5(category = None):

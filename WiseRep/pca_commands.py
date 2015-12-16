@@ -121,9 +121,8 @@ c1 = coefficients_reduced[0,:]
 c2 = coefficients_reduced[1,:]
 c3 = coefficients_reduced[2,:]
 
-l = ['c1c2', 'c1c3', 'c2c3']
 p1 = plt.plot(c1, c2, color='blue')
-p2 = plt.plot(c1, c3, color='green')
-p3 = plt.plot(c2, c3, color='black')
+# p2 = plt.plot(c1, c3, color='green')
+# p3 = plt.plot(c2, c3, color='black')
 plt.show()
 

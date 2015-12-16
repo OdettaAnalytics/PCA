@@ -9,3 +9,4 @@ WiseRep/supernovae_info.txt
 WiseRep/download_data.sh
 *.pyc*
 WiseRep/test.hdf5
+Component Plots/

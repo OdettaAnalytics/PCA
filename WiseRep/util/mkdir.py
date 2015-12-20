@@ -12,9 +12,9 @@ import util.get_data as get_data
 def init(categories):
 	for category in categories:
 		if not os.path.isdir('supernova_data/' + category):
-			os.makekdirs('supernova_data/' + category)
+			os.makekdirs('supernova_data/' + category + '/data/r')
 
-def plots(category=None, kind=None):
+def plots(category = None, kind = None):
 	if category is not None:
 		if kind is not None:
 			if not os.path.isdir('supernova_data/' + category + '/plots/' + kind):
@@ -33,14 +33,14 @@ def plots(category=None, kind=None):
 					os.makedirs(categoryDir + '/plots')
 
 
-def data(category=None, kind=None):
+def data(category = None, kind = None):
 	if category is not None:
 		if kind is not None:
 			if not os.path.isdir('supernova_data/' + category + '/data/' + kind):
-				os.makedirs('supernova_data' + category + '/data/' + kind)
+				os.makedirs('supernova_data/' + category + '/data/' + kind)
 		else:
 			if not os.path.isdir('supernova_data/' + category + '/data/'):
-				os.makedirs('supernova_data' + category + '/data/')
+				os.makedirs('supernova_data/' + category + '/data/')
 	else:
 		categoryDir = get_data.types()
 		for categoryDir in categoryDirs:

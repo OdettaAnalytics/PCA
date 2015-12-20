@@ -1,9 +1,6 @@
-import  numpy as np, os, os.path, sys, glob
-import get_data
-
-
-def get_object_z_values():
-	return glob.glob('supernova_data/objects_z_values*')[0]
+import numpy as np, os, os.path, sys, glob
+import util.get_data as get_data
+import util.mkdir as mkdir
 
 def extract_z_values(object_z_file):
 	object_zvalues = np.genfromtxt(object_z_file, dtype='str')
@@ -16,9 +13,9 @@ def extract_z_values(object_z_file):
 
 	return object_names, z_values
 
-def deredshift():
-	dataset = get_data.raw()
-	object_z_file = get_object_z_values()
+def deredshift(category = None):
+	dataset = get_data.raw(category)
+	object_z_file = get_data.z_value()
 	object_names, z_values = extract_z_values(object_z_file)
 	for data in dataset:
 		spectrum = np.loadtxt(data)
@@ -41,10 +38,11 @@ def deredshift():
 		deredshift_spectrum = deredshift_spectrum.T
 		data_str = data.split('/')
 		data_type = data_str[1]
-		data_name = data_str[3]
-		if not (os.path.isdir('supernova_data/' + data_type + '/deredshift_data/')):
-			os.mkdir('supernova_data/' + data_type + '/deredshift_data/')
-		deredshift_data = 'supernova_data/' + data_type + '/deredshift_data/' + data_name
+		data_name = data_str[4]
+		mkdir.data(category=data_type, kind='deredshift_data')
+		# if not (os.path.isdir('supernova_data/' + data_type + '/deredshift_data/')):
+		# 	os.mkdir('supernova_data/' + data_type + '/deredshift_data/')
+		deredshift_data = 'supernova_data/' + data_type + '/data/deredshift_data/' + data_name
 		np.savetxt(deredshift_data, deredshift_spectrum)
 
 if __name__ == '__main__':

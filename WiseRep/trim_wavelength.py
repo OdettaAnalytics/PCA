@@ -1,3 +1,11 @@
+__author__ = 'Leon Liang'
+
+'''
+This Python file processes already deredshifted spectrum
+and trim it so that the remaining wavelengths will be within
+the min_wave and max_wave inputs
+'''
+
 import numpy as np
 import util.get_data as get_data
 import util.mkdir as mkdir

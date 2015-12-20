@@ -1,3 +1,11 @@
+__author__ = 'Leon liang'
+
+'''
+This Python file gets all of data using glob
+and returns the data as a list of strings
+that other functions can then utilize
+'''
+
 import glob
 
 def trimmed(category = None):

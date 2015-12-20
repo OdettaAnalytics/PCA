@@ -1,4 +1,4 @@
-import numpy as np, os, os.path, sys, glob
+import numpy as np, sys
 import util.get_data as get_data
 import util.mkdir as mkdir
 

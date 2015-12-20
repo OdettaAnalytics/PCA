@@ -1,6 +1,6 @@
 __author__ = 'Leon Liang'
 
-import numpy as np, h5py, os, os.path, glob, sys
+import numpy as np, h5py, os, glob, sys
 import get_data
 
 def create_File(all_types):

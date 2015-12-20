@@ -1,14 +1,22 @@
-import numpy as np, os, os.path
-import get_data
+__author__ = 'Leon Liang'
 
+'''
+This Python file takes trimmed spectrum and demeaning
+the wavelengths of all spectrum such that the mean
+is now 0
+'''
+
+import numpy as np
+import util.get_data as get_data
+import util.mkdir as mkdir
 
 def demeaning(flux):
 	mean = np.mean(flux)
 	demeaned_flux = (flux/mean) - 1
 	return demeaned_flux
 
-def demean_flux():
-	dataset = get_data.trimmed()
+def demean_flux(category = None):
+	dataset = get_data.trimmed(category)
 	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:, 0]
@@ -28,12 +36,12 @@ def demean_flux():
 		demean_spectrum = demean_spectrum.T 
 		data_str = data.split('/')
 		data_type = data_str[1]
-		data_name = data_str[3]
-		if not (os.path.isdir('supernova_data/' + data_type + '/demeaned_data/')):
-			os.mkdir('supernova_data/' + data_type + '/demeaned_data/')
-		demeaned_data = 'supernova_data/' + data_type + '/demeaned_data/' + data_name
+		data_name = data_str[4]
+		mkdir.data(category=data_type, kind='demeaned_data')
+		# if not (os.path.isdir('supernova_data/' + data_type + '/demeaned_data/')):
+		# 	os.mkdir('supernova_data/' + data_type + '/demeaned_data/')
+		demeaned_data = 'supernova_data/' + data_type + '/data/demeaned_data/' + data_name
 		np.savetxt(demeaned_data, demean_spectrum)
-
 
 if __name__ == '__main__':
 	demean_flux()

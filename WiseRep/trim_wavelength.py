@@ -1,5 +1,6 @@
-import numpy as np, os, os.path, sys
-import get_data
+import numpy as np
+import util.get_data as get_data
+import util.mkdir as mkdir
 
 
 def trim_wavelength(min_wave, max_wave):
@@ -13,20 +14,21 @@ def trim_wavelength(min_wave, max_wave):
 			continue
 		[num_wave,] = wavelength.shape
 		for i in range(num_wave):
-			if wavelength[i] >= 4000:
+			if wavelength[i] >= min_wave:
 				min_range_start = i
 				break
 		for j in xrange(num_wave-1, min_range_start, -1):
-			if wavelength[j] <= 8000:
+			if wavelength[j] <= max_wave:
 				max_range_start = j
 				break
 		trimmed_spectrum = spectrum[min_range_start:max_range_start+1,:]
 		data_str = data.split('/')
 		data_type = data_str[1]
-		data_name = data_str[3]
-		if not (os.path.isdir('supernova_data/' + data_type + '/trimmed_data/')):
-			os.mkdir('supernova_data/' + data_type + '/trimmed_data/')
-		trimmed_wave = 'supernova_data/' + data_type + '/trimmed_data/' + data_name
+		data_name = data_str[4]
+		mkdir.data(category=data_type, kind='trimmed_data')
+		# if not (os.path.isdir('supernova_data/' + data_type + '/trimmed_data/')):
+		# 	os.mkdir('supernova_data/' + data_type + '/trimmed_data/')
+		trimmed_wave = 'supernova_data/' + data_type + '/data/trimmed_data/' + data_name
 		np.savetxt(trimmed_wave, trimmed_spectrum)
 
 # need to store the indices of where wavelength is out of range

@@ -13,7 +13,7 @@ import util.get_data as get_data
 import util.convert_HDF5 as convert_HDF5
 
 def trim_wavelength(min_wave, max_wave, category = None):
-	dataset = get_data.raw()
+	dataset = get_data.raw(category)
 	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:,0]

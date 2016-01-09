@@ -1,7 +1,7 @@
 __author__ = 'Leon Liang'
 
 import numpy as np, h5py, os, glob, sys
-import get_data
+import util/mkdir as mkdir
 
 # def create_File(all_types):
 # 	for data_dir in all_types:
@@ -30,6 +30,7 @@ import get_data
 # 		data_file.close()
 
 def create(data_category, data_name, data_type, spectrum):
+	mkdir.data(data_category)
 	data_file = h5py.File('supernova_data/' + data_category + '/data/' + data_type + '.hdf5')
 	data_file.create_dataset(data_name, data = spectrum)
 	data_file.close()

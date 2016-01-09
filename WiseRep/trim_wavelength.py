@@ -4,22 +4,21 @@ __author__ = 'Leon Liang'
 This Python file processes already deredshifted spectrum
 and trim it so that the remaining wavelengths will be within
 the min_wave and max_wave inputs
+
+outputs trimmed wavelengths into a hdf5 file
 '''
 
 import numpy as np
 import util.get_data as get_data
-import util.mkdir as mkdir
-
+import util.convert_HDF5 as convert_HDF5
 
 def trim_wavelength(min_wave, max_wave):
-	dataset = get_data.deredshift()
+	dataset = get_data.raw()
 	for data in dataset:
 		spectrum = np.loadtxt(data)
 		wavelength = spectrum[:,0]
-		if (min(wavelength) > min_wave):
-			continue
-		if (max(wavelength) < max_wave):
-			continue
+		# if (min(wavelength) > min_wave) and (max(wavelength) < max_wave):
+		# 	continue
 		[num_wave,] = wavelength.shape
 		for i in range(num_wave):
 			if wavelength[i] >= min_wave:
@@ -31,16 +30,14 @@ def trim_wavelength(min_wave, max_wave):
 				break
 		trimmed_spectrum = spectrum[min_range_start:max_range_start+1,:]
 		data_str = data.split('/')
-		data_type = data_str[1]
+		data_category = data_str[1]
 		data_name = data_str[4]
-		mkdir.data(category=data_type, kind='trimmed_data')
-		# if not (os.path.isdir('supernova_data/' + data_type + '/trimmed_data/')):
-		# 	os.mkdir('supernova_data/' + data_type + '/trimmed_data/')
-		trimmed_wave = 'supernova_data/' + data_type + '/data/trimmed_data/' + data_name
-		np.savetxt(trimmed_wave, trimmed_spectrum)
-
+		data_type = data_category + '_' + 'trimmed'
+		convert_HDF5.create(data_category, data_name, data_type, trimmed_spectrum)
+	
 # need to store the indices of where wavelength is out of range
 # and then use the same indices to keep the flux that's in the range 
+
 
 if __name__ == '__main__':
 	min_wave = 4000

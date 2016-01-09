@@ -34,10 +34,6 @@ def trim_wavelength(min_wave, max_wave):
 		data_name = data_str[4]
 		data_type = data_category + '_' + 'trimmed'
 		convert_HDF5.create(data_category, data_name, data_type, trimmed_spectrum)
-	
-# need to store the indices of where wavelength is out of range
-# and then use the same indices to keep the flux that's in the range 
-
 
 if __name__ == '__main__':
 	min_wave = 4000

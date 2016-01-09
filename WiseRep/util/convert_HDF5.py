@@ -1,7 +1,7 @@
 __author__ = 'Leon Liang'
 
 import numpy as np, h5py, os, glob, sys
-import util/mkdir as mkdir
+import util.mkdir as mkdir
 
 # def create_File(all_types):
 # 	for data_dir in all_types:

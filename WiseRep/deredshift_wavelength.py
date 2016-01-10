@@ -1,5 +1,10 @@
 __author__ = 'Leon Liang'
 
+'''
+For each supernova, we deredshift the wavelengths according
+to the z value that corresponds to the supernova
+'''
+
 import numpy as np, sys, h5py
 import util.get_data as get_data
 import util.mkdir as mkdir

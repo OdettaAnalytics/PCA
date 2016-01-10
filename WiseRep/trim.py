@@ -32,8 +32,8 @@ def trim(min_wave, max_wave, category = None):
 		data_str = data.split('/')
 		data_category = data_str[1]
 		data_name = data_str[4]
-		data_type = data_category + '_' + 'trimmed'
-		convert_HDF5.create(data_category, data_name, data_type, trimmed_spectrum)
+		data_type = data_category + '_' + 'trim'
+		convert_HDF5.write(data_category, data_name, data_type, trimmed_spectrum)
 
 if __name__ == '__main__':
 	min_wave = 4000

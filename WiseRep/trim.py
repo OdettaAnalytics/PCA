@@ -12,7 +12,7 @@ import numpy as np
 import util.get_data as get_data
 import util.convert_HDF5 as convert_HDF5
 
-def trim_wavelength(min_wave, max_wave, category = None):
+def trim(min_wave, max_wave, category = None):
 	data_path = get_data.raw(category)
 	for data in data_path:
 		spectrum = np.loadtxt(data)
@@ -38,4 +38,4 @@ def trim_wavelength(min_wave, max_wave, category = None):
 if __name__ == '__main__':
 	min_wave = 4000
 	max_wave = 8000
-	trim_wavelength(min_wave, max_wave)
+	trim(min_wave, max_wave)

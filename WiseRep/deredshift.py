@@ -1,8 +1,11 @@
 __author__ = 'Leon Liang'
 
 '''
-For each supernova, we deredshift the wavelengths according
-to the z value that corresponds to the supernova
+This Python file prcesses trimmed spectra and deredshift
+spectra's wavelengths according to the correspond z value
+for its supernova
+
+Outputs deredshifted spectra into a hdf5 file
 '''
 
 import numpy as np, sys, h5py

@@ -1,11 +1,11 @@
 __author__ = 'Leon Liang'
 
 '''
-This Python file processes already deredshifted spectrum
+This Python file processes raw spectra
 and trim it so that the remaining wavelengths will be within
 the min_wave and max_wave inputs
 
-outputs trimmed wavelengths into a hdf5 file
+Outputs trimmed spectra into a hdf5 file
 '''
 
 import numpy as np

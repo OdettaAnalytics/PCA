@@ -16,7 +16,7 @@ def raw(category = None):
 
 def trimmed(category = None):
 	if category is not None:
-		return glob.glob('supernova_data/' + category + '/data/*trimmed*')
+		return glob.glob('supernova_data/' + category + '/data/*trim*')
 	else:
 		return glob.glob('supernova_data/type*/data/*trimmed*')
 
@@ -28,7 +28,7 @@ def deredshift(category = None):
 
 def demeaned(category = None):
 	if category is not None:
-		return glob.glob('supernova_data/' + category + '/data/*demeaned*')
+		return glob.glob('supernova_data/' + category + '/data/*demean*')
 	else:
 		return glob.glob('supernova_data/type*/data/*demeaned')
 

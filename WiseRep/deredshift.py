@@ -23,7 +23,7 @@ def extract_z_values(object_z_file):
 	return object_names, z_values
 
 def deredshift(category = None):
-	data_path = get_data.trimmed(category)
+	data_path = get_data.trim(category)
 	object_z_file = get_data.z_value()
 	object_names, z_values = extract_z_values(object_z_file)
 	num_objects = len(object_names)

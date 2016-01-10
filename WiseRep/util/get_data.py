@@ -14,11 +14,11 @@ def raw(category = None):
 	else:
 		return glob.glob('supernova_data/type*/data/raw_data/*')
 
-def trimmed(category = None):
+def trim(category = None):
 	if category is not None:
 		return glob.glob('supernova_data/' + category + '/data/*trim*')
 	else:
-		return glob.glob('supernova_data/type*/data/*trimmed*')
+		return glob.glob('supernova_data/type*/data/*trim*')
 
 def deredshift(category = None):
 	if category is not None:
@@ -26,11 +26,11 @@ def deredshift(category = None):
 	else:
 		return glob.glob('supernova_data/type*/data/*deredshift*')
 
-def demeaned(category = None):
+def demean(category = None):
 	if category is not None:
 		return glob.glob('supernova_data/' + category + '/data/*demean*')
 	else:
-		return glob.glob('supernova_data/type*/data/*demeaned')
+		return glob.glob('supernova_data/type*/data/*demean*')
 
 def linear(category = None):
 	if category is not None:

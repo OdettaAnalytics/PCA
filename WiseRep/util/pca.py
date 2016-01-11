@@ -124,52 +124,52 @@ def compute_K(data_matrix):
 		data_matrix[data_category]['K'] = K_mat
 
 def plotting(data_matrix, pcomponents = [], category = None, save = False):
-	if category is not None:
-		coefficients_reduced = data_matrix[category]['coefficients']['reduced']
-		if len(pcomponents) == 0:
+	plots = []
+	plot_names = []
+	colors = ['blue', 'red', 'pink', 'orange', 'green', 'purple', 'black']
+	k = 0
+	if category:
+		categories = category
+	else:
+		categories = data_matrix
+	print categories
+	if len(pcomponents) == 0:
+		for data_category in categories:
+			coefficients_reduced = data_matrix[data_category]['coefficients']['reduced']
 			c1 = coefficients_reduced[0,:]
 			c2 = coefficients_reduced[1,:]
 			plt.scatter(c1, c2, label = category)
+			p = plt.scatter(c1, c2, color = colors[k], label = data_category)
+			plots.append(p)
+			plot_names.append(data_category)
 			plt.xlabel('c0')
 			plt.ylabel('c1')
-		else:
-			for component in pcomponents:
-				i = component[0]
-				j = component[1]
+			k += 1
+		plt.legend(plots, plot_names)
+	else:
+		num_plots = 0
+		for pcomponent in pcomponents:
+			k = 0
+			plots = []
+			plot_names = []
+			plt.figure()
+			for data_category in categories:
+				coefficients_reduced = data_matrix[data_category]['coefficients']['reduced']
+				i = pcomponent[0]
+				j = pcomponent[1]
 				cx = coefficients_reduced[i,:]
 				cy = coefficients_reduced[j,:]
-				plt.scatter(cx, cy, label = category)
-				plt.xlabel('c' + str(i))
-				plt.ylabel('c' + str(j))
-	else:
-		plots = []
-		plot_names = []
-		colors = ['blue', 'red', 'pink', 'orange', 'green', 'purple', 'black']
-		k = 0
-		for data_category in data_matrix:
-			coefficients_reduced = data_matrix[data_category]['coefficients']['reduced']
-			if len(pcomponents) == 0:
-				c1 = coefficients_reduced[0,:]
-				c2 = coefficients_reduced[1,:]
-				plt.scatter(c1, c2, label = category)
-				p = plt.scatter(c1, c2, color = colors[i], label = data_category)
+				p = plt.scatter(cx, cy, color = colors[k], label = category)
 				plots.append(p)
 				plot_names.append(data_category)
-				plt.xlabel('c0')
-				plt.ylabel('c1')
-			else:
-				for component in pcomponents:
-					i = component[0]
-					j = component[1]
-					cx = coefficients_reduced[i,:]
-					cy = coefficients_reduced[j,:]
-					p = plt.scatter(cx, cy, color = colors[k], label = category)
-					plots.append(p)
-					plot_names.append(data_category)
-					plt.xlabel('c' + str(i))
-					plt.ylabel('c' + str(j))
-					k += 1
-		plt.legend(plots, plot_names)
+				plt.xlabel('c' + str(i))
+				plt.ylabel('c' + str(j))
+				k += 1
+			plt.legend(plots, plot_names)
+			if save:
+				name = 'all_pca' + str(num_plots) + '.eps'
+				plt.savefig(name, format='eps', dpi = 3500)
+				num_plots += 1
 	if save:
 		if category:
 			name = category + '_pca.eps'

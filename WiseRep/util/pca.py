@@ -132,7 +132,6 @@ def plotting(data_matrix, pcomponents = [], category = None, save = False):
 		categories = category
 	else:
 		categories = data_matrix
-	print categories
 	if len(pcomponents) == 0:
 		for data_category in categories:
 			coefficients_reduced = data_matrix[data_category]['coefficients']['reduced']

@@ -12,7 +12,7 @@ import numpy as np
 import util.get_data as get_data
 import util.convert_HDF5 as convert_HDF5
 
-def trim(min_wave, max_wave, category = None):
+def trim(min_wave = 4000, max_wave = 8000, category = None):
 	data_path = get_data.raw(category)
 	for data in data_path:
 		spectrum = np.loadtxt(data)
@@ -35,7 +35,7 @@ def trim(min_wave, max_wave, category = None):
 		data_type = data_category + '_' + 'trim'
 		convert_HDF5.write(data_category, data_name, data_type, trimmed_spectrum)
 
-if __name__ == '__main__':
-	min_wave = 4000
-	max_wave = 8000
-	trim(min_wave, max_wave)
+# if __name__ == '__main__':
+# 	min_wave = 4000
+# 	max_wave = 8000
+# 	trim(min_wave, max_wave)

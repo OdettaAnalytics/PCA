@@ -52,5 +52,5 @@ def deredshift(category = None):
 			data_type = data_category + '_' + 'deredshift'
 			convert_HDF5.write(data_category, str(data_name), data_type, deredshift_spectrum)
 
-if __name__ == '__main__':
-	deredshift()
+# if __name__ == '__main__':
+# 	deredshift()

@@ -43,8 +43,8 @@ def demean_flux(category = None):
 			data_type = data_category + '_' + 'demean'
 			convert_HDF5.write(data_category, str(data_name), data_type, demeaned_spectrum)
 
-if __name__ == '__main__':
-	demean_flux()
+# if __name__ == '__main__':
+# 	demean_flux()
 
 
 

@@ -32,65 +32,65 @@ def interpolation(min_wave, max_wave, category = None):
 			f_x[data_name] = f
 	return f_x
 
-def log_rebinning(min_wave, max_wave, N, category = None):
+def log_rebinning(min_wave = 4000, max_wave = 8000, resolution = 2000, category = None):
 	f_x = interpolation(min_wave, max_wave, category)
 	data_path = get_data.demean(category)
 	for data_file in data_path:
 		dataset = h5py.File(data_file, 'r')
 		data_category = data_file.split('/')[1]
 		for data_name in dataset:
-			new_wavelength = np.logspace(np.log10(min_wave), np.log10(max_wave), num = N, endpoint = False)
+			new_wavelength = np.logspace(np.log10(min_wave), np.log10(max_wave), num = resolution, endpoint = False)
 			f = f_x[str(data_name)]
 			new_flux = f(new_wavelength)
 			new_rebin_data = np.vstack([new_wavelength, new_flux]).T
 			data_type = data_category + '_' + 'log_rebin'
 			convert_HDF5.write(data_category, str(data_name), data_type, new_rebin_data)
 
-def linear_rebinning(min_wave, max_wave, N, category = None):
+def linear_rebinning(min_wave = 4000, max_wave = 8000, resolution = 2000, category = None):
 	f_x = interpolation(min_wave, max_wave, category)
 	data_path = get_data.demean(category)
 	for data_file in data_path:
 		dataset = h5py.File(data_file, 'r')
 		data_category = data_file.split('/')[1]
 		for data_name in dataset:
-			new_wavelength = np.linspace(min_wave, max_wave, num = N, endpoint = False)
+			new_wavelength = np.linspace(min_wave, max_wave, num = resolution, endpoint = False)
 			f = f_x[str(data_name)]
 			new_flux = f(new_wavelength)
 			new_rebin_data = np.vstack([new_wavelength, new_flux]).T
 			data_type = data_category + '_' + 'linear_rebin'
 			convert_HDF5.write(data_category, str(data_name), data_type, new_rebin_data)
 
-parser = optparse.OptionParser()
-parser.add_option("--rebin",dest="rebin")
-(opts, args) = parser.parse_args()
+# parser = optparse.OptionParser()
+# parser.add_option("--rebin",dest="rebin")
+# (opts, args) = parser.parse_args()
 
-if (opts.rebin):
-	log = False
-	linear = False
-	if (opts.rebin.lower() == 'log'):
-		log = True
-	elif (opts.rebin.lower() == 'linear'):
-		linear = True
-	else:
-		print 'Please enter a valid rebin option: [log / linear]'
-		sys.exit()
-else:
-	log = True
-	linear = False
+# if (opts.rebin):
+# 	log = False
+# 	linear = False
+# 	if (opts.rebin.lower() == 'log'):
+# 		log = True
+# 	elif (opts.rebin.lower() == 'linear'):
+# 		linear = True
+# 	else:
+# 		print 'Please enter a valid rebin option: [log / linear]'
+# 		sys.exit()
+# else:
+# 	log = True
+# 	linear = False
 
-if (log):
-	print 'Logrithmic rebinning data...'
+# if (log):
+# 	print 'Logrithmic rebinning data...'
 
-if (linear):
-	print 'Linearly rebinning data...'
+# if (linear):
+# 	print 'Linearly rebinning data...'
 
-min_wave = 4000
-max_wave = 8000
-N = 2000
-if (log):
-	log_rebinning(min_wave, max_wave, N)
-if (linear):
-	linear_rebinning(min_wave, max_wave, N)
+# min_wave = 4000
+# max_wave = 8000
+# N = 2000
+# if (log):
+# 	log_rebinning(min_wave, max_wave, N)
+# if (linear):
+# 	linear_rebinning(min_wave, max_wave, N)
 
 
 

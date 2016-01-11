@@ -40,14 +40,14 @@ save = False
 rebin = 'log'
 
 if opts.category:
-	category = opts.category
+	category = opts.category.split('[')[1].split(']')[0].split(',')
 if opts.pcomponents:
 	pcomps = opts.pcomponents.split('[')[1].split(']')[0].split(',')
 	if len(pcomps) % 2 > 0:
 		print 'Please enter an even number of principal components you want to analysis'
 		sys.exit()
 	else:
-		for i in range(len(pcomps) - 1):
+		for i in range(0, len(pcomps) - 1, 2):
 			cx = int(pcomps[i])
 			cy = int(pcomps[i + 1])
 			pcomponents.append([cx, cy])
@@ -117,10 +117,3 @@ else:
 
 	if opts.pca:
 		pca.run(category, rebin, n, pcomponents, save)
-
-
-
-
-
-
-

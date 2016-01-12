@@ -13,8 +13,8 @@ def form_matrix(category = None, data_type = 'log'):
 	data_matrix = {}
 	for data_file in data_path:
 		data_mat = {}
-		all_wavelength = np.array([])
-		all_flux = np.array([])
+		all_wavelength = np.array([], dtype = np.float64)
+		all_flux = np.array([], dtype = np.float64)
 		data_category = data_file.split('/')[1]
 		dataset = h5py.File(data_file, 'r')
 		for data_name in dataset:

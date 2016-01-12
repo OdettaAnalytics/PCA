@@ -46,8 +46,8 @@ def data(category = None, kind = None):
 				if not os.path.isdir(category_dir + '/data/' + kind):
 					os.makedirs(category_dir + '/data/' + kind)
 			else:
-				if not os.path.isdir(category_dir + '/data'):
-					os.makedirs(category_dir + '/data')
+				if not os.path.isdir(category_dir + '/data/'):
+					os.makedirs(category_dir + '/data/')
 
 def plots(category = None, kind = None):
 	'''
@@ -63,14 +63,13 @@ def plots(category = None, kind = None):
 				os.makedirs('supernova_data/' + category + '/plots/')
 	else:
 		category_dirs = get_data.types()
-		for category_dir in categoryDirs:
+		for category_dir in category_dirs:
 			if kind is not None:
 				if not os.path.isdir(category_dir + '/plots/' + kind):
 					os.makedirs(category_dir + '/plots/' + kind)
 			else:
-				if not os.path.isdir(category_dir + '/plots'):
-					os.makedirs(category_dir + '/plots')
-
+				if not os.path.isdir(category_dir + '/plots/'):
+					os.makedirs(category_dir + '/plots/')
 
 # def remove(category=None, kind=None):
 

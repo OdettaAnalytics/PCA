@@ -179,6 +179,7 @@ def plotting(data_matrix, pcomponents = [], category = None, save = False):
 					mkdir(data_category, 'pca')
 					name = 'supernova_data/' + data_category + '/plots/pca/' + data_category + '_pca_c' + str(i) + '_vs_c' + str(j) + '.eps'
 				else:
+					mkdir('all', 'pca')
 					name = 'supernova_data/all/plots/pca/all_pca_c' + str(i) + '_vs_c' + str(j) + '.eps'
 				plt.savefig(name, format='eps', dpi = 3500)
 				num_plots += 1

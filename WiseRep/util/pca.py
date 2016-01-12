@@ -36,7 +36,7 @@ def normalize(data_matrix):
 		flux = data_matrix[data_category]['flux']
 		for i in range(len(flux)):
 			if np.linalg.norm(flux[i,:]) > 0:
-				flux /= np.linalg.norm(flux[i,:])
+				flux[i,:] /= np.linalg.norm(flux[i,:])
 
 def compute_mean(data_matrix):
 	for data_category in data_matrix:

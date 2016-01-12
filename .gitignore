@@ -11,3 +11,4 @@ WiseRep/download_data.sh
 WiseRep/test.hdf5
 Component Plots/
 supernova_data/
+WiseRep/*.eps

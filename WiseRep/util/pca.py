@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os, os.path, glob, sys, optparse, h5py
 import util.get_data as get_data
+import util.mkdir as mkdir
 
 def form_matrix(category = None, data_type = 'log'):
 	if data_type == 'linear':	
@@ -146,9 +147,11 @@ def plotting(data_matrix, pcomponents = [], category = None, save = False):
 			k += 1
 			if save:
 				if category:
-					name = data_category + '_pca.eps'
+					mkdir(data_category, 'pca')
+					name = 'supernova_data/' + data_category + '/plots/pca/' + data_category + '_pca_c0_vs_c1.eps'
 				else:
-					name = 'all_pca.eps'
+					mkdir('all', 'pca')
+					name = 'supernova_data/all/plots/pca/all_pca_c0_vs_c1.eps'
 				plt.savefig(name, format='eps', dpi = 3500)
 		plt.legend(plots, plot_names)
 	else:
@@ -172,7 +175,11 @@ def plotting(data_matrix, pcomponents = [], category = None, save = False):
 				k += 1
 			plt.legend(plots, plot_names)
 			if save:
-				name = 'all_pca' + str(num_plots) + '.eps'
+				if category:
+					mkdir(data_category, 'pca')
+					name = 'supernova_data/' + data_category + '/plots/pca/' + data_category + '_pca_c' + str(i) + '_vs_c' + str(j) + '.eps'
+				else:
+					name = 'supernova_data/all/plots/pca/all_pca_c' + str(i) + '_vs_c' + str(j) + '.eps'
 				plt.savefig(name, format='eps', dpi = 3500)
 				num_plots += 1
 	plt.show()

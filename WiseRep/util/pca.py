@@ -144,6 +144,12 @@ def plotting(data_matrix, pcomponents = [], category = None, save = False):
 			plt.xlabel('c0')
 			plt.ylabel('c1')
 			k += 1
+			if save:
+				if category:
+					name = data_category + '_pca.eps'
+				else:
+					name = 'all_pca.eps'
+				plt.savefig(name, format='eps', dpi = 3500)
 		plt.legend(plots, plot_names)
 	else:
 		num_plots = 0
@@ -169,12 +175,6 @@ def plotting(data_matrix, pcomponents = [], category = None, save = False):
 				name = 'all_pca' + str(num_plots) + '.eps'
 				plt.savefig(name, format='eps', dpi = 3500)
 				num_plots += 1
-	if save:
-		if category:
-			name = category + '_pca.eps'
-		else:
-			name = 'all_pca.eps'
-		plt.savefig(name, format='eps', dpi = 3500)
 	plt.show()
 
 def run(category, data_type, n, pcomponents, save):

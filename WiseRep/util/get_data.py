@@ -8,11 +8,14 @@ that other functions can then utilize
 
 import glob, sys
 
-def raw(category = None):
+def raw(category = None, dataset = None):
 	if category is not None:
 		data_path = []
 		for c in category:
-			data_path += (glob.glob('supernova_data/' + c + '/data/raw_data/*'))
+			if dataset:
+				data_path += (glob.glob('supernova_data/' + c + '/data/raw_data/' + dataset))
+			else:
+				data_path += (glob.glob('supernova_data/' + c + '/data/raw_data/*'))
 		return data_path
 	else:
 		return glob.glob('supernova_data/type*/data/raw_data/*')

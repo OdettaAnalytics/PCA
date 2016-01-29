@@ -137,10 +137,10 @@ def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, 
 	if len(pcomponents) == 0:
 		for data_category in categories:
 			coefficients_reduced = data_matrix[data_category]['coefficients']['reduced']
-			c1 = coefficients_reduced[0,:]
-			c2 = coefficients_reduced[1,:]
-			plt.scatter(c1, c2, label = category)
-			p = plt.scatter(c1, c2, color = colors[k], label = data_category)
+			c0 = coefficients_reduced[0,:]
+			c1 = coefficients_reduced[1,:]
+			plt.scatter(c0, c1, label = category)
+			p = plt.scatter(c0, c1, color = colors[k], label = data_category)
 			plots.append(p)
 			plot_names.append(data_category)
 			plt.xlabel('c0')
@@ -155,9 +155,9 @@ def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, 
 					name = 'supernova_data/all/plots/pca/all_pca_c0_vs_c1.eps'
 				plt.savefig(name, format='eps', dpi = 3500)
 		if legend:
-			plt.legend(plots, plot_names)
+			plt.legend(plot_names)
 	else:
-		num_plots = 0
+		# num_plots = 0
 		for pcomponent in pcomponents:
 			k = 0
 			plots = []
@@ -176,7 +176,7 @@ def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, 
 				plt.ylabel('c' + str(j))
 				k += 1
 			if legend:
-				plt.legend(plots, plot_names)
+				plt.legend(plot_names)
 			if save:
 				if category:
 					mkdir.plots(data_category, 'pca')
@@ -185,7 +185,7 @@ def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, 
 					mkdir.plots('all', 'pca')
 					name = 'supernova_data/all/plots/pca/all_pca_c' + str(i) + '_vs_c' + str(j) + '.eps'
 				plt.savefig(name, format='eps', dpi = 3500)
-				num_plots += 1
+				# num_plots += 1
 	if xranges:
 		plt.xlim([xranges[0], xranges[1]])
 	if yranges:
@@ -193,9 +193,51 @@ def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, 
 	plt.grid()
 	plt.show()
 
-# def plot_raw(category, range):
+def plot_raw_data(data_matrix, category, pcomponents, xranges, yranges):
+	if category:
+		categories = category
+	else:
+		categories = data_matrix
+	match_raws = []
+	if len(pcomponents) == 0:
+		for data_category in categories:
+			coefficients_reduced = data_matrix[data_category]['coefficients']['reduced']
+			c0 = coefficients_reduced[0,:]
+			c1 = coefficients_reduced[1,:]
+			x = np.where(np.logical_and(c0 > xranges[0], c0 < xranges[1]))[0]
+			y = np.where(np.logical_and(c1 > yranges[0], c1 < yranges[1]))[0]
+			intersection = np.intersect1d(x,y)[0]
+			match_raws.append(str(data_matrix[data_category]['keys'][intersection]))
+	else:
+		for pcomponent in pcomponents:
+			for data_category in categories:
+				coefficients_reduced = data_matrix[data_category]['coefficients']['reduced']
+				i = pcomponent[0]
+				j = pcomponent[1]
+				cx = coefficients_reduced[i,:]
+				cy = coefficients_reduced[j,:]
+				x = np.where(np.logical_and(cx > xranges[0], cx < xranges[1]))[0]
+				y = np.where(np.logical_and(cy > yranges[0], cy < yranges[1]))[0]
+				intersection = np.intersect1d(x,y)[0]
+				match_raws.append(str(data_matrix[data_category]['keys'][intersection]))
 
-def run(category = None, data_type = 'log', n = 6, pcomponents = [], save = False, xranges = None, yranges = None, legend = False):
+	plots = []
+	for i in range(len(categories)):
+		data_category = categories[i]
+		dataset = match_raws[i]
+		raw_data_path = get_data.raw([data_category], dataset)[0]
+		spectrum = np.loadtxt(raw_data_path)
+		wavelength = spectrum[:,0]
+		flux = spectrum[:,1]
+		p = plt.plot(wavelength, flux, label = dataset)
+		plots.append(p)
+
+	plt.legend(match_raws)
+	plt.xlabel('wavelength')
+	plt.ylabel('flux')
+	plt.show()
+
+def run(category = None, data_type = 'log', n = 6, pcomponents = [], save = False, plot_comps = True, plot_raw = False, xranges = None, yranges = None, legend = False):
 	data_matrix = form_matrix(category, data_type)
 	normalize(data_matrix)
 	compute_mean(data_matrix)
@@ -204,7 +246,10 @@ def run(category = None, data_type = 'log', n = 6, pcomponents = [], save = Fals
 	compute_pca(data_matrix)
 	reduce_pca(data_matrix, n)
 	# compute_K(data_matrix)
-	plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend)
+	if plot_comps:
+		plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend)
+	if plot_raw:
+		plot_raw_data(data_matrix, category, pcomponents, xranges, yranges)
 
 # data_matrix = form_matrix()
 # normalize(data_matrix)

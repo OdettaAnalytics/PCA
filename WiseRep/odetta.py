@@ -29,8 +29,11 @@ parser.add_option("--resolution", dest = "resolution")
 parser.add_option("--legend", dest = "legend")
 parser.add_option("--xranges", dest = "xranges")
 parser.add_option("--yranges", dest = "yranges")
+parser.add_option("--plot_comps", dest = "plot_comps")
+parser.add_option("--plot_raw", dest = "plot_raw")
 parser.add_option("-n", dest = "n_comp")
 parser.add_option("-s", dest  = "save")
+
 
 (opts, args) = parser.parse_args()
 
@@ -43,6 +46,8 @@ save = False
 rebin = 'log'
 xranges = None
 yranges = None
+plot_comps = True
+plot_raw = False
 
 if opts.category:
 	category = opts.category.split('[')[1].split(']')[0].split(',')
@@ -72,6 +77,12 @@ if opts.yranges:
 	yranges[1] = float(yranges[1])
 if opts.legend:
 	legend = True
+if opts.plot_comps:
+	if opts.plot_comps.lower() == 'false':
+		plot_comps = False
+if opts.plot_raw:
+	plot_raw = True
+	plot_comps = False
 
 if not (opts.trim or opts.deredshift or opts.demean or opts.interpolate or opts.pca):
 	min_wave = 4000
@@ -100,7 +111,7 @@ if not (opts.trim or opts.deredshift or opts.demean or opts.interpolate or opts.
 	else:
 		interpolate.log_rebinning(min_wave, max_wave, resolution, category)
 
-	pca.run(category, rebin, n, pcomponents, save, xranges, yranges, legend)
+	pca.run(category, rebin, n, pcomponents, save, plot_comps, plot_raw, xranges, yranges, legend)
 
 else:
 	if opts.trim:
@@ -131,4 +142,4 @@ else:
 			interpolate.log_rebinning(min_wave, max_wave, resolution, category)
 
 	if opts.pca:
-		pca.run(category, rebin, n, pcomponents, save,xranges, yranges, legend)
+		pca.run(category, rebin, n, pcomponents, save, plot_comps, plot_raw, xranges, yranges, legend)

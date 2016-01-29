@@ -125,7 +125,7 @@ def compute_K(data_matrix):
 		K_mat['reduced'] = K_reduced
 		data_matrix[data_category]['K'] = K_mat
 
-def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend):
+def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend, show):
 	plots = []
 	plot_names = []
 	colors = ['blue', 'red', 'pink', 'orange', 'green', 'purple', 'black']
@@ -167,9 +167,10 @@ def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, 
 	if yranges:
 		plt.ylim([yranges[0], yranges[1]])
 	plt.grid()
-	plt.show()
+	if show:
+		plt.show()
 
-def plot_raw_data(data_matrix, category, pcomponents, xranges, yranges):
+def plot_raw_data(data_matrix, category, pcomponents, xranges, yranges, compare):
 	if category:
 		categories = category
 	else:
@@ -182,28 +183,49 @@ def plot_raw_data(data_matrix, category, pcomponents, xranges, yranges):
 			j = pcomponent[1]
 			cx = coefficients_reduced[i,:]
 			cy = coefficients_reduced[j,:]
-			x = np.where(np.logical_and(cx > xranges[0], cx < xranges[1]))[0]
-			y = np.where(np.logical_and(cy > yranges[0], cy < yranges[1]))[0]
-			intersection = np.intersect1d(x,y)[0]
-			match_raws.append(str(data_matrix[data_category]['keys'][intersection]))
-
-	plots = []
-	for i in range(len(categories)):
-		data_category = categories[i]
-		dataset = match_raws[i]
-		raw_data_path = get_data.raw([data_category], dataset)[0]
-		spectrum = np.loadtxt(raw_data_path)
-		wavelength = spectrum[:,0]
-		flux = spectrum[:,1]
-		p = plt.plot(wavelength, flux, label = dataset)
-		plots.append(p)
+			if compare:
+				if compare == "x":
+					min_x = np.where(cx == min(cx))[0]
+					max_x = np.where(cx == max(cx))[0]
+					match_raws.append(str(data_matrix[data_category]['keys'][min_x]))
+					match_raws.append(str(data_matrix[data_category]['keys'][max_x]))
+				else:
+					min_y = np.where(cy == min[cy])[0]
+					max_y = np.where(cy == max[cy])[0]
+					match_raws.append(str(data_matrix[data_category]['keys'][min_y]))
+					match_raws.append(str(data_matrix[data_category]['keys'][max_y]))
+				plots = []
+				for i in range(len(match_raws)):
+					data_category = categories[0]
+					dataset = match_raws[i]
+					raw_data_path = get_data.raw([data_category], dataset)[0]
+					spectrum = np.loadtxt(raw_data_path)
+					wavelength = spectrum[:,0]
+					flux = spectrum[:,1]
+					p = plt.plot(wavelength, flux, label = dataset)
+					plots.append(p)
+			else:
+				x = np.where(np.logical_and(cx > xranges[0], cx < xranges[1]))[0]
+				y = np.where(np.logical_and(cy > yranges[0], cy < yranges[1]))[0]
+				intersection = np.intersect1d(x,y)[0]
+				match_raws.append(str(data_matrix[data_category]['keys'][intersection]))
+				plots = []
+				for i in range(len(categories)):
+					data_category = categories[i]
+					dataset = match_raws[i]
+					raw_data_path = get_data.raw([data_category], dataset)[0]
+					spectrum = np.loadtxt(raw_data_path)
+					wavelength = spectrum[:,0]
+					flux = spectrum[:,1]
+					p = plt.plot(wavelength, flux, label = dataset)
+					plots.append(p)
 
 	plt.legend(match_raws)
 	plt.xlabel('wavelength')
 	plt.ylabel('flux')
 	plt.show()
 
-def run(category = None, data_type = 'log', n = 6, pcomponents = [[0,1]], save = False, plot_comps = True, plot_raw = False, xranges = None, yranges = None, legend = False):
+def run(category = None, data_type = 'log', n = 6, pcomponents = [[0,1]], save = False, plot_comps = True, plot_raw = False, xranges = None, yranges = None, legend = False, compare = None, show = True):
 	data_matrix = form_matrix(category, data_type)
 	normalize(data_matrix)
 	compute_mean(data_matrix)
@@ -213,9 +235,9 @@ def run(category = None, data_type = 'log', n = 6, pcomponents = [[0,1]], save =
 	reduce_pca(data_matrix, n)
 	# compute_K(data_matrix)
 	if plot_comps:
-		plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend)
+		plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend, show)
 	if plot_raw:
-		plot_raw_data(data_matrix, category, pcomponents, xranges, yranges)
+		plot_raw_data(data_matrix, category, pcomponents, xranges, yranges, compare)
 
 # data_matrix = form_matrix()
 # normalize(data_matrix)

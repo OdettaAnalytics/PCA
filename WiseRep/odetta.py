@@ -37,7 +37,7 @@ parser.add_option("-s", dest  = "save")
 
 (opts, args) = parser.parse_args()
 
-pcomponents = []
+pcomponents = [[0,1]]
 category = None
 legend = False
 n = 6
@@ -57,6 +57,7 @@ if opts.pcomponents:
 		print 'Please enter an even number of principal components you want to analysis'
 		sys.exit()
 	else:
+		pcomponents = []
 		for i in range(0, len(pcomps) - 1, 2):
 			cx = int(pcomps[i])
 			cy = int(pcomps[i + 1])

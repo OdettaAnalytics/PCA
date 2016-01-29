@@ -6,7 +6,7 @@ import os, os.path, glob, sys, optparse, h5py
 import util.get_data as get_data
 import util.mkdir as mkdir
 
-def form_matrix(category = None, data_type = 'log'):
+def form_matrix(category, data_type):
 	if data_type == 'linear':	
 		data_path = get_data.linear(category)
 	else:
@@ -29,6 +29,7 @@ def form_matrix(category = None, data_type = 'log'):
 				all_flux = np.vstack([all_flux, flux])
 		data_mat['wavelength'] = all_wavelength
 		data_mat['flux'] = all_flux
+		data_mat['keys'] = dataset.keys()
 		data_matrix[data_category] = data_mat
 	return data_matrix
 
@@ -98,7 +99,7 @@ def compute_pca(data_matrix):
 		data_matrix[data_category]['pca'] = pca_matrix
 		data_matrix[data_category]['coefficients']['normal'] = coefficients
 
-def reduce_pca(data_matrix, n = 6):
+def reduce_pca(data_matrix, n):
 	for data_category in data_matrix:
 		flux = data_matrix[data_category]['flux']
 		U = data_matrix[data_category]['svd']['U']
@@ -124,7 +125,7 @@ def compute_K(data_matrix):
 		K_mat['reduced'] = K_reduced
 		data_matrix[data_category]['K'] = K_mat
 
-def plotting(data_matrix, pcomponents = [], category = None, save = False):
+def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend):
 	plots = []
 	plot_names = []
 	colors = ['blue', 'red', 'pink', 'orange', 'green', 'purple', 'black']
@@ -147,13 +148,14 @@ def plotting(data_matrix, pcomponents = [], category = None, save = False):
 			k += 1
 			if save:
 				if category:
-					mkdir(data_category, 'pca')
+					mkdir.plots(data_category, 'pca')
 					name = 'supernova_data/' + data_category + '/plots/pca/' + data_category + '_pca_c0_vs_c1.eps'
 				else:
-					mkdir('all', 'pca')
+					mkdir.plots('all', 'pca')
 					name = 'supernova_data/all/plots/pca/all_pca_c0_vs_c1.eps'
 				plt.savefig(name, format='eps', dpi = 3500)
-		plt.legend(plots, plot_names)
+		if legend:
+			plt.legend(plots, plot_names)
 	else:
 		num_plots = 0
 		for pcomponent in pcomponents:
@@ -173,19 +175,27 @@ def plotting(data_matrix, pcomponents = [], category = None, save = False):
 				plt.xlabel('c' + str(i))
 				plt.ylabel('c' + str(j))
 				k += 1
-			plt.legend(plots, plot_names)
+			if legend:
+				plt.legend(plots, plot_names)
 			if save:
 				if category:
-					mkdir(data_category, 'pca')
+					mkdir.plots(data_category, 'pca')
 					name = 'supernova_data/' + data_category + '/plots/pca/' + data_category + '_pca_c' + str(i) + '_vs_c' + str(j) + '.eps'
 				else:
-					mkdir('all', 'pca')
+					mkdir.plots('all', 'pca')
 					name = 'supernova_data/all/plots/pca/all_pca_c' + str(i) + '_vs_c' + str(j) + '.eps'
 				plt.savefig(name, format='eps', dpi = 3500)
 				num_plots += 1
+	if xranges:
+		plt.xlim([xranges[0], xranges[1]])
+	if yranges:
+		plt.ylim([yranges[0], yranges[1]])
+	plt.grid()
 	plt.show()
 
-def run(category, data_type, n, pcomponents, save):
+# def plot_raw(category, range):
+
+def run(category = None, data_type = 'log', n = 6, pcomponents = [], save = False, xranges = None, yranges = None, legend = False):
 	data_matrix = form_matrix(category, data_type)
 	normalize(data_matrix)
 	compute_mean(data_matrix)
@@ -194,7 +204,7 @@ def run(category, data_type, n, pcomponents, save):
 	compute_pca(data_matrix)
 	reduce_pca(data_matrix, n)
 	# compute_K(data_matrix)
-	plotting(data_matrix, pcomponents, category, save)
+	plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend)
 
 # data_matrix = form_matrix()
 # normalize(data_matrix)
@@ -203,4 +213,4 @@ def run(category, data_type, n, pcomponents, save):
 # svd(data_matrix)
 # compute_pca(data_matrix)
 # reduce_pca(data_matrix)
-# plotting(data_matrix)
+# plot_components(data_matrix)

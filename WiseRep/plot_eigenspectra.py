@@ -26,7 +26,7 @@ for i in range(250):
 		plt.scatter(x[:n], coefficients_normal[i,:], color = colors[k%len(colors)], label = data_category)
 		x += 1
 		k += 1
-	plt.scatter(x[0] + 2, np.array([0]))
+	plt.scatter(x[0] + 2, np.array([0]), color = 'white')
 	plt.legend()
 	plt.title('Eigenspectra ' + str(i))
 	name = 'supernova_data/all/plots/pca/coefficients/coefficient_' + str(i) + '.eps'

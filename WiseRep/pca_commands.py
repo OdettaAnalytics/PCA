@@ -1,3 +1,5 @@
+# For testing purposes
+
 category = ['type_Ia']
 data_matrix = pca.form_matrix(category)
 pca.normalize(data_matrix)

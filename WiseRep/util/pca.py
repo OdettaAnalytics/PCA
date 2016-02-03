@@ -31,6 +31,7 @@ def form_matrix(category, data_type):
 		data_mat['flux'] = all_flux
 		data_mat['keys'] = dataset.keys()
 		data_matrix[data_category] = data_mat
+		dataset.close()
 	return data_matrix
 
 def normalize(data_matrix):

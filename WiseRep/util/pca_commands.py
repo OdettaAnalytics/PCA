@@ -1,7 +1,7 @@
 # For testing purposes
 
-category = ['type_Ia']
-data_matrix = pca.form_matrix(category)
+category = None
+data_matrix = pca.form_matrix(category, 'log')
 pca.normalize(data_matrix)
 pca.compute_mean(data_matrix)
 pca.demean(data_matrix)

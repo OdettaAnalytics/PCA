@@ -128,7 +128,7 @@ def compute_K(data_matrix):
 def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend, show):
 	plots = []
 	plot_names = []
-	colors = ['blue', 'red', 'pink', 'orange', 'green', 'purple', 'black']
+	colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
 	k = 0
 	if category:
 		categories = category

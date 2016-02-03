@@ -3,7 +3,6 @@ __author__ = 'Leon Liang'
 import numpy as np
 import util.pca as pca
 import matplotlib.pyplot as plt
-import matplotlib.axis as ax
 
 category = None
 data_matrix = pca.form_matrix(category, data_type = 'log')

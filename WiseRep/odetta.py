@@ -50,6 +50,8 @@ plot_comps = True
 plot_raw = False
 show = True
 compare = None
+min_wave = 4000
+max_wave = 8000
 
 if opts.category:
 	category = opts.category.split('[')[1].split(']')[0].split(',')
@@ -64,6 +66,14 @@ if opts.pcomponents:
 			cx = int(pcomps[i])
 			cy = int(pcomps[i + 1])
 			pcomponents.append([cx, cy])
+if opts.wave_range:
+	min_wave = float(opts.wave_range[0])
+	max_wave = float(opts.wave_range[1])
+else:
+	if opts.min_wave:
+		min_wave = float(opts.min_wave)
+	if opts.max_wave:
+		max_wave = float(opts.max_wave)
 if opts.n_comp:
 	n = int(opts.n_comp)
 if opts.resolution:
@@ -89,17 +99,8 @@ if opts.plot:
 	if opts.compare:
 		compare = str(opts.compare)
 
+
 if not (opts.trim or opts.deredshift or opts.demean or opts.interpolate or opts.pca):
-	min_wave = 4000
-	max_wave = 8000
-	if opts.wave_range:
-		min_wave = float(opts.wave_range[0])
-		max_wave = float(opts.wave_range[1])
-	else:
-		if opts.min_wave:
-			min_wave = float(opts.min_wave)
-		if opts.max_wave:
-			max_wave = float(opts.max_wave)
 	trim.trim(min_wave, max_wave, category)
 	
 	deredshift.deredshift(category)
@@ -120,16 +121,6 @@ if not (opts.trim or opts.deredshift or opts.demean or opts.interpolate or opts.
 
 else:
 	if opts.trim:
-		min_wave = 4000
-		max_wave = 8000
-		if opts.wave_range:
-			min_wave = float(opts.wave_range[0])
-			max_wave = float(opts.wave_range[1])
-		else:
-			if opts.min_wave:
-				min_wave = float(opts.min_wave)
-			if opts.max_wave:
-				max_wave = float(opts.max_wave)
 		trim.trim(min_wave, max_wave, category)
 	if opts.deredshift:
 		deredshift.deredshift(category)

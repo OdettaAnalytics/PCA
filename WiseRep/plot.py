@@ -54,7 +54,7 @@ def eigenspectra(category = None, data_type = 'log'):
 	pca.compute_pca(data_matrix)
 	pca.reduce_pca(data_matrix, n = 6)
 	colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
-	mkdir.plots(category = 'all', kind = 'pca/coefficients')
+	mkdir.plots(category = ['all'], kind = 'pca/coefficients')
 	for i in range(250):
 		x = np.zeros([100])
 		k = 0

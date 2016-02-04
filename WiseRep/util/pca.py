@@ -6,7 +6,7 @@ import os, os.path, glob, sys, optparse, h5py
 import util.get_data as get_data
 import util.mkdir as mkdir
 
-def form_matrix(category, data_type):
+def form_matrix(category = None, data_type = 'log'):
 	if data_type == 'linear':	
 		data_path = get_data.linear(category)
 	else:
@@ -100,7 +100,7 @@ def compute_pca(data_matrix):
 		data_matrix[data_category]['pca'] = pca_matrix
 		data_matrix[data_category]['coefficients']['normal'] = coefficients
 
-def reduce_pca(data_matrix, n):
+def reduce_pca(data_matrix, n = 10):
 	for data_category in data_matrix:
 		flux = data_matrix[data_category]['flux']
 		U = data_matrix[data_category]['svd']['U']
@@ -126,7 +126,7 @@ def compute_K(data_matrix):
 		K_mat['reduced'] = K_reduced
 		data_matrix[data_category]['K'] = K_mat
 
-def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend, show):
+def plot_components(data_matrix, category = None, pcomponents = [[0,1]], save = False, xranges = None, yranges = None, legend = False, show = True):
 	plots = []
 	plot_names = []
 	colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
@@ -171,7 +171,7 @@ def plot_components(data_matrix, category, pcomponents, save, xranges, yranges, 
 	if show:
 		plt.show()
 
-def plot_raw_data(data_matrix, category, pcomponents, xranges, yranges, compare):
+def plot_raw_data(data_matrix, category = None, pcomponents = [[0,1]], xranges = None, yranges = None, compare = None):
 	if category:
 		categories = category
 	else:
@@ -226,7 +226,7 @@ def plot_raw_data(data_matrix, category, pcomponents, xranges, yranges, compare)
 	plt.ylabel('flux')
 	plt.show()
 
-def run(category = None, data_type = 'log', n = 6, pcomponents = [[0,1]], save = False, plot_comps = True, plot_raw = False, xranges = None, yranges = None, legend = False, compare = None, show = True):
+def run(category = None, data_type = 'log', n = 10, pcomponents = [[0,1]], save = False, plot_comps = True, plot_raw = False, xranges = None, yranges = None, legend = False, compare = None, show = True):
 	data_matrix = form_matrix(category, data_type)
 	normalize(data_matrix)
 	compute_mean(data_matrix)

@@ -8,7 +8,7 @@ import util.mkdir as mkdir
 import h5py
 import optparse, sys
 
-WARNING = "Please enter the what you want to plot: [raw, interpolate, eigenspectra]."
+WARNING = "Please enter the what you want to plot: python ploy.py [raw, interpolates, coefficients]."
 def raw(category = None):
 	data_path = get_data.raw(category)
 	mkdir.plots(category = None, kind = 'raw')
@@ -25,7 +25,7 @@ def raw(category = None):
 		plt.savefig(filename, format='eps', dpi = 3500)
 		plt.close()
 
-def interpolate(category = None, data_type = 'log'):
+def interpolates(category = None, data_type = 'log'):
 	if data_type == 'linear':	
 		data_path = get_data.linear(category)
 	else:
@@ -46,7 +46,7 @@ def interpolate(category = None, data_type = 'log'):
 			plt.close()
 		dataset.close()
 
-def eigenspectra(category = None, data_type = 'log'):
+def coefficients(category = None, data_type = 'log'):
 	data_matrix = pca.form_matrix(category, data_type)
 	pca.normalize(data_matrix)
 	pca.compute_mean(data_matrix)
@@ -69,7 +69,7 @@ def eigenspectra(category = None, data_type = 'log'):
 
 		plt.scatter(x[0] + 2, np.array([0]), color = 'white')
 		plt.legend()
-		plt.title('Eigenspectra ' + str(i))
+		plt.title('coefficient ' + str(i))
 		name = 'supernova_data/all/plots/pca/coefficients/coefficient_' + str(i) + '.eps'
 		plt.savefig(name, format='eps', dpi = 3500)
 		plt.close()
@@ -77,6 +77,7 @@ def eigenspectra(category = None, data_type = 'log'):
 parser = optparse.OptionParser()
 parser.add_option("--rebin", dest = "rebin")
 parser.add_option("--category", dest = "category")
+parser.add_option("-s", dest = "save")
 (opts, args) = parser.parse_args()
 
 if len(args) == 0:
@@ -94,10 +95,10 @@ if opts.category:
 
 if args[0] == 'raw':
 	raw(category)
-elif args[0] == 'interpolate':
-	interpolate(category, rebin)
-elif args[0] == 'eigenspectra':
-	eigenspectra(category, rebin)
+elif args[0] == 'interpolates':
+	interpolates(category, rebin)
+elif args[0] == 'coefficients':
+	coefficients(category, rebin)
 else:
 	print 'Incorrect plot type entered. ' + WARNING
 	sys.exit()

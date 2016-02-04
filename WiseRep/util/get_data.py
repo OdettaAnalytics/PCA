@@ -9,6 +9,8 @@ that other functions can then utilize
 import glob, sys
 
 def raw(category = None, dataset = None):
+	if type(category) == str:
+		category = [category]
 	if category is not None:
 		data_path = []
 		for c in category:
@@ -21,6 +23,8 @@ def raw(category = None, dataset = None):
 		return glob.glob('supernova_data/type*/data/raw_data/*')
 
 def trim(category = None):
+	if type(category) == str:
+		category = [category]
 	if category is not None:
 		data_path = []
 		for c in category:
@@ -30,6 +34,8 @@ def trim(category = None):
 		return glob.glob('supernova_data/type*/data/*trim*')
 
 def deredshift(category = None):
+	if type(category) == str:
+		category = [category]
 	if category is not None:
 		data_path = []
 		for c in category:
@@ -39,6 +45,8 @@ def deredshift(category = None):
 		return glob.glob('supernova_data/type*/data/*deredshift*')
 
 def demean(category = None):
+	if type(category) == str:
+		category = [category]
 	if category is not None:
 		data_path = []
 		for c in category:
@@ -47,23 +55,16 @@ def demean(category = None):
 	else:
 		return glob.glob('supernova_data/type*/data/*demean*')
 
-def linear(category = None):
+def interpolation(category = None, data_type = 'log'):
+	if type(category) == str:
+		category = [category]
 	if category is not None:
 		data_path = []
 		for c in category:
-			data_path += (glob.glob('supernova_data/' + c + '/data/*linear_rebin*'))
+			data_path += (glob.glob('supernova_data/' + c + '/data/*' + data_type + '_rebin*'))
 		return data_path
 	else:
-		return glob.glob('supernova_data/type*/data/*linear_rebin*')
-
-def log(category = None):
-	if category is not None:
-		data_path = []
-		for c in category:
-			data_path += (glob.glob('supernova_data/' + c + '/data/*log_rebin*'))
-		return data_path
-	else:
-		return glob.glob('supernova_data/type*/data/*log_rebin*')
+		return glob.glob('supernova_data/type*/data/*' + data_type + '_rebin*')
 
 def z_value():
 	z_value = glob.glob('objects_z_values*')
@@ -73,6 +74,6 @@ def z_value():
 	else:
 		return z_value[0]
 
-def types(category = None, data_type = None, type_all = False):
+def types(category = None):
 	types = glob.glob('supernova_data/type*')
 	return types

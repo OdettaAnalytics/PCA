@@ -7,10 +7,7 @@ import util.get_data as get_data
 import util.mkdir as mkdir
 
 def form_matrix(category = None, data_type = 'log'):
-	if data_type == 'linear':	
-		data_path = get_data.linear(category)
-	else:
-		data_path = get_data.log(category)
+	data_path = get_data.interpolation(category, data_type)
 	data_matrix = {}
 	for data_file in data_path:
 		data_mat = {}
@@ -29,7 +26,7 @@ def form_matrix(category = None, data_type = 'log'):
 				all_flux = np.vstack([all_flux, flux])
 		data_mat['wavelength'] = all_wavelength
 		data_mat['flux'] = all_flux
-		data_mat['keys'] = dataset.keys()
+		data_mat['keys'] = np.array(dataset.keys(), dtype = str)
 		data_matrix[data_category] = data_mat
 		dataset.close()
 	return data_matrix

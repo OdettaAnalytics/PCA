@@ -55,12 +55,13 @@ def plots(category = None, kind = None):
 	kind: the data type that is needed (trimmed, demeaned, etc.)
 	'''
 	if category is not None:
-		if kind is not None:
-			if not os.path.isdir('supernova_data/' + category + '/plots/' + kind):
-				os.makedirs('supernova_data/' + category + '/plots/' + kind)
-		else:
-			if not os.path.isdir('supernova_data/' + category + '/plots/'):
-				os.makedirs('supernova_data/' + category + '/plots/')
+		for c in category:
+			if kind is not None:
+				if not os.path.isdir('supernova_data/' + c + '/plots/' + kind):
+					os.makedirs('supernova_data/' + c + '/plots/' + kind)
+			else:
+				if not os.path.isdir('supernova_data/' + c + '/plots/'):
+					os.makedirs('supernova_data/' + c + '/plots/')
 	else:
 		category_dirs = get_data.types()
 		for category_dir in category_dirs:

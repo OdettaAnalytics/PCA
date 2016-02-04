@@ -8,6 +8,7 @@ import util.mkdir as mkdir
 import h5py
 import optparse, sys
 
+WARNING = "Please enter the what you want to plot: [raw, interpolate, eigenspectra]."
 def raw(category = None):
 	data_path = get_data.raw(category)
 	mkdir.plots(category = None, kind = 'raw')
@@ -79,7 +80,7 @@ parser.add_option("--category", dest = "category")
 (opts, args) = parser.parse_args()
 
 if len(args) == 0:
-	print "Please enter the what you want to plot: [raw, interpolate, eigenspectra]."
+	print WARNING
 	sys.exit()
 
 rebin = 'log'
@@ -98,7 +99,7 @@ elif args[0] == 'interpolate':
 elif args[0] == 'eigenspectra':
 	eigenspectra(category, rebin)
 else:
-	print 'Incorrect plot type entered.'
+	print 'Incorrect plot type entered. ' + WARNING
 	sys.exit()
 
 

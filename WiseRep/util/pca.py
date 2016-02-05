@@ -139,7 +139,7 @@ def save_pca(data_matrix):
 def plot_components(data_matrix, category = None, pcomponents = [[0,1]], save = False, xranges = None, yranges = None, legend = False, show = True):
 	plots = []
 	plot_names = []
-	colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
+	colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'black']
 	k = 0
 	if category:
 		categories = category

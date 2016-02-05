@@ -247,10 +247,10 @@ def run(category = None, data_type = 'log', n = 10, pcomponents = [[0,1]], save 
 	reduce_pca(data_matrix, n)
 	save_pca(data_matrix)
 	# compute_K(data_matrix)
-	if plot_comps:
-		plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend, show)
-	if plot_raw:
-		plot_raw_data(data_matrix, category, pcomponents, xranges, yranges, compare)
+	# if plot_comps:
+	# 	plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend, show)
+	# if plot_raw:
+	# 	plot_raw_data(data_matrix, category, pcomponents, xranges, yranges, compare)
 
 # data_matrix = form_matrix()
 # normalize(data_matrix)

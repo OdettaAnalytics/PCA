@@ -12,6 +12,7 @@ import util.deredshift as deredshift
 import util.demean as demean
 import util.rebin as rebin
 import util.pca as pca
+import util.plot as plt
 
 parser = optparse.OptionParser()
 parser.add_option("--trim", dest = "trim")
@@ -24,53 +25,50 @@ parser.add_option("--category", dest = "category")
 parser.add_option("--wave_range", dest = "wave_range")
 parser.add_option("--min_wave", dest = "min_wave")
 parser.add_option("--max_wave", dest = "max_wave")
-parser.add_option("--pcomponents", dest = "pcomponents")
+parser.add_option("--components", dest = "components")
 parser.add_option("--resolution", dest = "resolution")
 parser.add_option("--legend", dest = "legend")
-parser.add_option("--xranges", dest = "xranges")
-parser.add_option("--yranges", dest = "yranges")
 parser.add_option("--plot", dest = "plot")
-parser.add_option("--compare", dest = "compare")
 parser.add_option("-n", dest = "n_comp")
+parser.add_option("--n_coefs", dest = "n_coefs")
 parser.add_option("-s", dest  = "save")
+parser.add_option("--show", dest  = "show")
+
 
 
 (opts, args) = parser.parse_args()
 
-pcomponents = [[0,1]]
+components = [[0,1]]
 category = None
-legend = False
+legend = True
 n = 6
 resolution = 2000
-save = False
+save = True
 rebin_type = 'log'
-xranges = None
-yranges = None
-plot_comps = True
-plot_raw = False
-show = True
+show = False
 compare = None
 min_wave = 4000
 max_wave = 8000
+num_coefs = 80
 
 if opts.category:
 	category = opts.category.split('[')[1].split(']')[0].split(',')
-if opts.pcomponents:
-	pcomps = opts.pcomponents.split('[')[1].split(']')[0].split(',')
-	if len(pcomps) % 2 > 0:
+if opts.components:
+	comps = opts.components.split('[')[1].split(']')[0].split(',')
+	if len(comps) % 2 > 0:
 		print 'Please enter an even number of principal components you want to analysis'
 		sys.exit()
 	else:
-		pcomponents = []
-		for i in range(0, len(pcomps) - 1, 2):
-			cx = int(pcomps[i])
-			cy = int(pcomps[i + 1])
-			pcomponents.append([cx, cy])
+		components = []
+		for i in range(0, len(comps) - 1, 2):
+			cx = int(comps[i])
+			cy = int(comps[i + 1])
+			components.append([cx, cy])
 if opts.rebin_type:
 	if opts.rebin_type == 'linear':
-		rebinr_type = 'linear'
+		rebin_type = 'linear'
 	else:
-		rebinr_type = 'log'
+		rebin_type = 'log'
 if opts.wave_range:
 	min_wave = float(opts.wave_range[0])
 	max_wave = float(opts.wave_range[1])
@@ -84,33 +82,23 @@ if opts.n_comp:
 if opts.resolution:
 	resolution = int(opts.resolution)
 if opts.save:
-	save = True
-if opts.xranges:
-	xranges = opts.xranges.split('[')[1].split(']')[0].split(',')
-	xranges[0] = float(xranges[0])
-	xranges[1] = float(xranges[1])
-if opts.yranges:
-	yranges = opts.yranges.split('[')[1].split(']')[0].split(',')
-	yranges[0] = float(yranges[0])
-	yranges[1] = float(yranges[1])
+	if opts.save == 'False':
+		save = False
 if opts.legend:
-	legend = True
-if opts.plot:
-	if opts.plot.lower() == 'raw':
-		plot_raw = True
-		plot_comps = False
-	if opts.plot.lower() == 'false':
-		show = False
-	if opts.compare:
-		compare = str(opts.compare)
+	if opts.legend == 'False':
+		legend = False
+if opts.n_coefs:
+	num_coefs = int(opts.n_coefs)
+if opts.show:
+	show = True
 
-
-if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca):
+if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca or opts.plot):
 	trim.trim(min_wave, max_wave, category)
 	deredshift.deredshift(category)
 	demean.demean_flux(category)
 	rebin.run(min_wave, max_wave, resolution, category, rebin_type)
-	pca.run(category, rebin, n, pcomponents, save, plot_comps, plot_raw, xranges, yranges, legend, compare, show)
+	pca.run(category, rebin, n)
+	plt.pcomponents(category, components, legend, save, show)
 
 else:
 	if opts.trim:
@@ -122,4 +110,16 @@ else:
 	if opts.rebin:
 		rebin.run(min_wave, max_wave, resolution, category, rebin_type)
 	if opts.pca:
-		pca.run(category, rebin, n, pcomponents, save, plot_comps, plot_raw, xranges, yranges, legend, compare, show)
+		pca.run(category, rebin, n)
+	if opts.plot:
+		if opts.plot.lower() == 'raw':
+			plt.raw(category)
+		elif opts.plot.lower() == 'deredshift':
+			plt.deredshift(category)
+		elif opts.plot.lower() == 'rebin':
+			plt.rebin(category, rebin_type)
+		elif opts.plot.lower() == 'coefficients':
+			plt.coefficients(category, rebin_type, num_coefs, legend, save, show)
+		else:
+			plt.pcomponents(category, components, legend, save, show)
+				

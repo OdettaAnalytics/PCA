@@ -48,7 +48,7 @@ def deredshift(category = None):
 			plt.close()
 		dataset.close()
 
-def rebin(category = None, rebin_type = 'log', save = True):
+def rebin(category = None, rebin_type = 'log'):
 	data_path = get.data('rebin', category)
 	mkdir.plots(category = None, kind = 'rebin_' + rebin_type)
 	for data_file in data_path:
@@ -67,10 +67,10 @@ def rebin(category = None, rebin_type = 'log', save = True):
 			plt.close()
 		dataset.close()
 
-def coefficients(category = None, rebin_type = 'log', legend = True, save = True, show = False):
+def coefficients(category = None, rebin_type = 'log', n = 80, legend = True, save = True, show = False):
 	data_path = get.data('pca', category)
 	mkdir.plots(category = 'all', kind = 'pca/coefficients')
-	for i in range(81):
+	for i in range(n + 1):
 		x = np.zeros([100])
 		k = 0
 		plt.figure()
@@ -103,8 +103,8 @@ def pcomponents(category = None, components = [[0,1]], legend = True, save = Tru
 		plots = []
 		plot_names = []
 		plt.figure()
-		i = pcomponent[0]
-		j = pcomponent[1]
+		i = component[0]
+		j = component[1]
 		for data_file in data_path:
 			data_category = data_file.split('/')[1]
 			dataset = h5py.File(data_file, 'r')	
@@ -126,72 +126,71 @@ def pcomponents(category = None, components = [[0,1]], legend = True, save = Tru
 		if show:
 			plt.show()
 
+# parser = optparse.OptionParser()
+# parser.add_option("--rebin_type", dest = "rebin_type")
+# parser.add_option("--category", dest = "category")
+# parser.add_option("--components", dest = "components")
+# parser.add_option("--legend", dest = "legend")
+# parser.add_option("--show", dest = "show")
+# parser.add_option("-s", dest = "save")
 
-parser = optparse.OptionParser()
-parser.add_option("--rebin_type", dest = "rebin_type")
-parser.add_option("--category", dest = "category")
-parser.add_option("--components", dest = "components")
-parser.add_option("--legend", dest = "legend")
-parser.add_option("--show", dest = "show")
-parser.add_option("-s", dest = "save")
+# (opts, args) = parser.parse_args()
 
-(opts, args) = parser.parse_args()
+# if len(args) == 0:
+# 	print WARNING
+# 	sys.exit()
 
-if len(args) == 0:
-	print WARNING
-	sys.exit()
-
-rebin_type = 'log'
-if opts.rebin_type:
-	if opts.rebin_type == 'linear':
-		rebin_type = 'linear'
-
-
-category = None
-if opts.category:
-	category = opts.category.split('[')[1].split(']')[0].split(',')
-
-components = [[0,1]]
-if opts.components:
-	pcomps = opts.components.split('[')[1].split(']')[0].split(',')
-	if len(pcomps)%2 != 0:
-		print 'Please enter an even number of principal components you want to analysis'
-		sys.exit()
-	else:
-		components = []
-		for i in range(0, len(pcomps) - 1, 2):
-			cx = int(pcomps[i])
-			cy = int(pcomps[i + 1])
-			components.append([cx, cy])
-
-show = False
-if opts.show:
-	show = True
-
-legend = True
-if opts.legend:
-	if opts.legend == 'False':
-		legend = False
-
-save = True
-if opts.save:
-	if opts.save == 'False':
-		save = False
+# rebin_type = 'log'
+# if opts.rebin_type:
+# 	if opts.rebin_type == 'linear':
+# 		rebin_type = 'linear'
 
 
-if args[0] == 'raw':
-	raw(category)
-elif args[0] == 'deredshift':
-	deredshift(category)
-elif args[0] == 'rebin':
-	rebin(category, rebin_type)
-elif args[0] == 'coefficients':
-	coefficients(category, rebin)
-elif args[0] == 'pcomponents':
-	pcomponents(category, components, legend, save, show)
-else:
-	print 'Incorrect plot type entered. ' + WARNING
-	sys.exit()
+# category = None
+# if opts.category:
+# 	category = opts.category.split('[')[1].split(']')[0].split(',')
+
+# components = [[0,1]]
+# if opts.components:
+# 	pcomps = opts.components.split('[')[1].split(']')[0].split(',')
+# 	if len(pcomps)%2 != 0:
+# 		print 'Please enter an even number of principal components you want to analysis'
+# 		sys.exit()
+# 	else:
+# 		components = []
+# 		for i in range(0, len(pcomps) - 1, 2):
+# 			cx = int(pcomps[i])
+# 			cy = int(pcomps[i + 1])
+# 			components.append([cx, cy])
+
+# show = False
+# if opts.show:
+# 	show = True
+
+# legend = True
+# if opts.legend:
+# 	if opts.legend == 'False':
+# 		legend = False
+
+# save = True
+# if opts.save:
+# 	if opts.save == 'False':
+# 		save = False
+
+
+# if args[0] == 'raw':
+# 	raw(category)
+# elif args[0] == 'deredshift':
+# 	deredshift(category)
+# elif args[0] == 'rebin':
+# 	rebin(category, rebin_type)
+# elif args[0] == 'coefficients':
+# 	coefficients(category, rebin)
+# elif args[0] == 'pcomponents':
+# 	pcomponents(category, components, legend, save, show)
+# else:
+# 	print 'Incorrect plot type entered. ' + WARNING
+# 	sys.exit()
 
 
 

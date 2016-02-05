@@ -9,7 +9,7 @@ Outputs deredshifted spectra into a hdf5 file
 '''
 
 import numpy as np, sys, h5py
-import util.get_data as get_data
+import util.get as get
 import util.mkdir as mkdir
 import util.convert_HDF5 as convert_HDF5
 
@@ -23,8 +23,8 @@ def extract_z_values(object_z_file):
 	return object_names, z_values
 
 def deredshift(category = None):
-	data_path = get_data.trim(category)
-	object_z_file = get_data.z_value()
+	data_path = get.data('trim', category)
+	object_z_file = get.z_value()
 	object_names, z_values = extract_z_values(object_z_file)
 	num_objects = len(object_names)
 	for data_file in data_path:

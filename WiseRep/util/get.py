@@ -8,7 +8,7 @@ that other functions can then utilize
 
 import glob, sys
 
-def data(data_type, category = None, data_file = None):
+def data(data_type, category = None, data_file = None, rebin_type = 'log'):
 	if type(category) == str:
 		category = [category]
 
@@ -19,12 +19,16 @@ def data(data_type, category = None, data_file = None):
 				data_path += (glob.glob('supernova_data/' + c + '/data/raw_data/' + data_file))
 			elif data_type == 'raw':
 				data_path += (glob.glob('supernova_data/' + c + '/data/raw_data/*'))
+			elif data_type == 'interpolation':
+				data_path += (glob.glob('supernova_data/' + c + '/data/*' + rebin_type + '*'))
 			else:
 				data_path += (glob.glob('supernova_data/' + c + '/data/*' + data_type + '*'))
 		return data_path
 	else:
 		if data_type == 'raw':
 			return glob.glob('supernova_data/type*/data/raw_data/*')
+		elif data_type == 'interpolation':
+			data_path += (glob.glob('supernova_data/type*/data/*' + rebin_type + '*'))
 		else:
 			return glob.glob('supernova_data/type*/data/*' + data_type + '*')
 

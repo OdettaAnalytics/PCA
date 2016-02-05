@@ -3,12 +3,12 @@ __author__ = 'Leon liang'
 import numpy as np 
 import matplotlib.pyplot as plt
 import os, os.path, glob, sys, optparse, h5py
-import util.get_data as get_data
+import util.get as get
 import util.mkdir as mkdir
 import util.convert_HDF5 as convert_HDF5
 
-def form_matrix(category = None, data_type = 'log'):
-	data_path = get_data.interpolation(category, data_type)
+def form_matrix(category = None, rebin_type = 'log'):
+	data_path = get.data('interpolation', category, rebin_type)
 	data_matrix = {}
 	for data_file in data_path:
 		data_mat = {}

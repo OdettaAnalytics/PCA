@@ -66,6 +66,11 @@ if opts.pcomponents:
 			cx = int(pcomps[i])
 			cy = int(pcomps[i + 1])
 			pcomponents.append([cx, cy])
+if opts.rebin:
+	if opts.rebin == 'linear':
+		rebin = 'linear'
+	else:
+		rebin = 'log'
 if opts.wave_range:
 	min_wave = float(opts.wave_range[0])
 	max_wave = float(opts.wave_range[1])
@@ -107,15 +112,7 @@ if not (opts.trim or opts.deredshift or opts.demean or opts.interpolate or opts.
 
 	demean.demean_flux(category)
 
-	if opts.rebin:
-		if opts.rebin == 'linear':
-			rebin = 'linear'
-			interpolate.linear_rebinning(min_wave, max_wave, resolution, category)
-		else:
-			interpolate.log_rebinning(min_wave, max_wave, resolution, category)
-
-	else:
-		interpolate.log_rebinning(min_wave, max_wave, resolution, category)
+	interpolate.run(min_wave, max_wave, resolution, category, rebin)
 
 	pca.run(category, rebin, n, pcomponents, save, plot_comps, plot_raw, xranges, yranges, legend, compare, show)
 
@@ -127,15 +124,6 @@ else:
 	if opts.demean:
 		demean.demean_flux(category)
 	if opts.interpolate:
-		if opts.rebin:
-			if opts.rebin == 'linear':
-				rebin = 'linear'
-				interpolate.linear_rebinning(min_wave, max_wave, resolution, category)
-			else:
-				interpolate.log_rebinning(min_wave, max_wave, resolution, category)
-
-		else:
-			interpolate.log_rebinning(min_wave, max_wave, resolution, category)
-
+		interpolate.run(min_wave, max_wave, resolution, category, rebin)
 	if opts.pca:
 		pca.run(category, rebin, n, pcomponents, save, plot_comps, plot_raw, xranges, yranges, legend, compare, show)

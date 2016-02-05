@@ -9,7 +9,7 @@ Outputs the demeaned spectra into a hdf5 file
 '''
 
 import numpy as np, h5py
-import util.get_data as get_data
+import util.get as get
 import util.convert_HDF5 as convert_HDF5
 
 def demeaning(flux):
@@ -18,7 +18,7 @@ def demeaning(flux):
 	return demeaned_flux
 
 def demean_flux(category = None):
-	data_path = get_data.deredshift(category)
+	data_path = get.data('deredshift', category)
 	for data_file in data_path:
 		dataset = h5py.File(data_file, 'r')
 		data_category = data_file.split('/')[1]

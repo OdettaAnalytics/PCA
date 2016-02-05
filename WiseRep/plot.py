@@ -20,6 +20,8 @@ def raw(category = None):
 		plt.figure()
 		plt.plot(wavelength, flux)
 		plt.title(data_name)
+		plt.xlabel('wavelength')
+		plt.ylabel('flux')
 		data_category = data_name.split('/')[1]
 		name = data_name.split('/')[4]
 		filename = 'supernova_data/' + data_category + '/plots/raw/' + name + '.eps'
@@ -37,6 +39,8 @@ def deredshifts(category = None):
 			flux = dataset[data_name][:, 1]
 			plt.figure()
 			plt.plot(wavelength, flux)
+			plt.xlabel('wavelength')
+			plt.ylabel('flux')
 			plot_name = data_name
 			plt.title(plot_name)
 			filename = 'supernova_data/' + data_category + '/plots/' + data_type + '/' + data_name + '.eps'
@@ -55,6 +59,8 @@ def interpolates(category = None, data_type = 'log'):
 			flux = dataset[data_name][:, 1]
 			plt.figure()
 			plt.plot(wavelength, flux)
+			plt.xlabel('wavelength')
+			plt.ylabel('flux')
 			plot_name = data_name
 			plt.title(plot_name)
 			filename = 'supernova_data/' + data_category + '/plots/' + data_type + '/' + data_name + '.eps'
@@ -89,6 +95,8 @@ def coefficients(category = None, data_type = 'log'):
 		name = 'supernova_data/all/plots/pca/coefficients/coefficient_' + str(i) + '.eps'
 		plt.savefig(name, format='eps', dpi = 3500)
 		plt.close()
+
+# def pcomponents(category = None)
 
 parser = optparse.OptionParser()
 parser.add_option("--rebin", dest = "rebin")

@@ -10,15 +10,15 @@ import optparse, sys
 import util.trim as trim
 import util.deredshift as deredshift
 import util.demean as demean
-import util.interpolate as interpolate
+import util.rebin as rebin
 import util.pca as pca
 
 parser = optparse.OptionParser()
 parser.add_option("--trim", dest = "trim")
 parser.add_option("--deredshift", dest = "deredshift")
 parser.add_option("--demean", dest = "demean")
-parser.add_option("--interpolate", dest = "interpolate")
 parser.add_option("--rebin", dest = "rebin")
+parser.add_option("--rebin_type", dest = "rebin_type")
 parser.add_option("--pca", dest = "pca")
 parser.add_option("--category", dest = "category")
 parser.add_option("--wave_range", dest = "wave_range")
@@ -43,7 +43,7 @@ legend = False
 n = 6
 resolution = 2000
 save = False
-rebin = 'log'
+rebin_type = 'log'
 xranges = None
 yranges = None
 plot_comps = True
@@ -66,11 +66,11 @@ if opts.pcomponents:
 			cx = int(pcomps[i])
 			cy = int(pcomps[i + 1])
 			pcomponents.append([cx, cy])
-if opts.rebin:
-	if opts.rebin == 'linear':
-		rebin = 'linear'
+if opts.rebin_type:
+	if opts.rebin_type == 'linear':
+		rebinr_type = 'linear'
 	else:
-		rebin = 'log'
+		rebinr_type = 'log'
 if opts.wave_range:
 	min_wave = float(opts.wave_range[0])
 	max_wave = float(opts.wave_range[1])
@@ -105,15 +105,11 @@ if opts.plot:
 		compare = str(opts.compare)
 
 
-if not (opts.trim or opts.deredshift or opts.demean or opts.interpolate or opts.pca):
+if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca):
 	trim.trim(min_wave, max_wave, category)
-	
 	deredshift.deredshift(category)
-
 	demean.demean_flux(category)
-
-	interpolate.run(min_wave, max_wave, resolution, category, rebin)
-
+	rebin.run(min_wave, max_wave, resolution, category, rebin_type)
 	pca.run(category, rebin, n, pcomponents, save, plot_comps, plot_raw, xranges, yranges, legend, compare, show)
 
 else:
@@ -123,7 +119,7 @@ else:
 		deredshift.deredshift(category)
 	if opts.demean:
 		demean.demean_flux(category)
-	if opts.interpolate:
-		interpolate.run(min_wave, max_wave, resolution, category, rebin)
+	if opts.rebin:
+		rebin.run(min_wave, max_wave, resolution, category, rebin_type)
 	if opts.pca:
 		pca.run(category, rebin, n, pcomponents, save, plot_comps, plot_raw, xranges, yranges, legend, compare, show)

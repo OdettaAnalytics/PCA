@@ -8,7 +8,7 @@ import util.mkdir as mkdir
 import util.convert_HDF5 as convert_HDF5
 
 def form_matrix(category = None, rebin_type = 'log'):
-	data_path = get.data('interpolation', category, rebin_type)
+	data_path = get.data('rebin', category, rebin_type)
 	data_matrix = {}
 	for data_file in data_path:
 		data_mat = {}

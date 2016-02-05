@@ -66,6 +66,17 @@ def interpolation(category = None, data_type = 'log'):
 	else:
 		return glob.glob('supernova_data/type*/data/*' + data_type + '_rebin*')
 
+def pca(category = None):
+	if type(category) == str:
+		category = [category]
+	if category is not None:
+		data_path = []
+		for c in category:
+			data_path += (glob.glob('supernova_data/' + c + '/data/*pca*'))
+		return data_path
+	else:
+		return glob.glob('supernova_data/type*/data/*pca*')
+
 def z_value():
 	z_value = glob.glob('objects_z_values*')
 	if len(z_value) == 0:

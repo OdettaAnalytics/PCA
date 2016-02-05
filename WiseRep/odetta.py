@@ -120,6 +120,6 @@ else:
 	if opts.demean:
 		demean.demean_flux(category)
 	if opts.rebin:
-		rebin.run(min_wave, max_wave, resolution, category, rebin_typeg)
+		rebin.run(min_wave, max_wave, resolution, category, rebin_type)
 	if opts.pca:
 		pca.run(category, rebin, n, pcomponents, save, plot_comps, plot_raw, xranges, yranges, legend, compare, show)

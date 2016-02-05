@@ -19,11 +19,11 @@ def raw(category = None):
 		flux = spectrum[:,1]
 		plt.figure()
 		plt.plot(wavelength, flux)
-		plt.title(data_name)
+		name = data_name.split('/')[4]
+		plt.title(name)
 		plt.xlabel('wavelength')
 		plt.ylabel('flux')
 		data_category = data_name.split('/')[1]
-		name = data_name.split('/')[4]
 		filename = 'supernova_data/' + data_category + '/plots/raw/' + name + '.eps'
 		plt.savefig(filename, format='eps', dpi = 3500)
 		plt.close()
@@ -41,16 +41,15 @@ def deredshift(category = None):
 			plt.plot(wavelength, flux)
 			plt.xlabel('wavelength')
 			plt.ylabel('flux')
-			plot_name = data_name
-			plt.title(plot_name)
+			plt.title(data_name)
 			filename = 'supernova_data/' + data_category + '/plots/deredshift/' + data_name + '.eps'
 			plt.savefig(filename, format='eps', dpi = 3500)
 			plt.close()
 		dataset.close()
 
-def rebin(category = None, data_type = 'log'):
-	data_path = get_data.interpolation(category)
-	mkdir.plots(category = None, kind = data_type)
+def rebin(category = None, rebin_type = 'log'):
+	data_path = get.data('rebin', category)
+	mkdir.plots(category = None, kind = 'rebin_' + rebin_type)
 	for data_file in data_path:
 		data_category = data_file.split('/')[1]
 		dataset = h5py.File(data_file, 'r')
@@ -61,33 +60,36 @@ def rebin(category = None, data_type = 'log'):
 			plt.plot(wavelength, flux)
 			plt.xlabel('wavelength')
 			plt.ylabel('flux')
-			plot_name = data_name
-			plt.title(plot_name)
-			filename = 'supernova_data/' + data_category + '/plots/rebin_' + data_type + '/' + data_name + '.eps'
+			plt.title(data_name)
+			filename = 'supernova_data/' + data_category + '/plots/rebin_' + rebin_type + '/' + data_name + '.eps'
 			plt.savefig(filename, format='eps', dpi = 3500)
 			plt.close()
 		dataset.close()
 
-def coefficients(category = None, data_type = 'log'):
-	data_matrix = pca.form_matrix(category, data_type)
-	pca.normalize(data_matrix)
-	pca.compute_mean(data_matrix)
-	pca.demean(data_matrix)
-	pca.svd(data_matrix)
-	pca.compute_pca(data_matrix)
-	pca.reduce_pca(data_matrix, n = 6)
+def coefficients(category = None, rebin_type = 'log'):
+	# data_matrix = pca.form_matrix(category, rebin_type)
+	# pca.normalize(data_matrix)
+	# pca.compute_mean(data_matrix)
+	# pca.demean(data_matrix)
+	# pca.svd(data_matrix)
+	# pca.compute_pca(data_matrix)
+	# pca.reduce_pca(data_matrix, n = 6)
+	data_path = get.data('pca', category)
 	colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
-	mkdir.plots(category = ['all'], kind = 'pca/coefficients')
+	mkdir.plots(category = 'all', kind = 'pca/coefficients')
 	for i in range(250):
 		x = np.zeros([100])
 		k = 0
 		plt.figure()
-		for data_category in data_matrix:
-			coefficients_normal = data_matrix[data_category]['coefficients']['normal']
+		for data_file in data_path:
+			data_category = data_file.split('/')[1]
+			dataset = h5py.File(data_file, 'r')	
+			coefficients_normal = dataset['coefficients_normal']
 			[m,n] = coefficients_normal.shape
 			plt.scatter(x[:n], coefficients_normal[i,:], color = colors[k%len(colors)], label = data_category)
 			x += 1
 			k += 1
+			dataset.close()
 
 		plt.scatter(x[0] + 2, np.array([0]), color = 'white')
 		plt.legend()
@@ -99,7 +101,7 @@ def coefficients(category = None, data_type = 'log'):
 # def pcomponents(category = None)
 
 parser = optparse.OptionParser()
-parser.add_option("--rebin", dest = "rebin")
+parser.add_option("--rebin_type", dest = "rebin_type")
 parser.add_option("--category", dest = "category")
 parser.add_option("-s", dest = "save")
 (opts, args) = parser.parse_args()
@@ -108,10 +110,11 @@ if len(args) == 0:
 	print WARNING
 	sys.exit()
 
-rebin = 'log'
-if opts.rebin:
-	if opts.rebin == 'linear':
-		rebin = 'linear'
+rebin_type = 'log'
+if opts.rebin_type:
+	if opts.rebin_type == 'linear':
+		rebin_type = 'linear'
+
 
 category = None
 if opts.category:
@@ -119,8 +122,10 @@ if opts.category:
 
 if args[0] == 'raw':
 	raw(category)
-elif args[0] == 'interpolates':
-	interpolates(category, rebin)
+elif args[0] == 'deredshift':
+	deredshift(category)
+elif args[0] == 'rebin':
+	rebin(category, rebin_type)
 elif args[0] == 'coefficients':
 	coefficients(category, rebin)
 else:

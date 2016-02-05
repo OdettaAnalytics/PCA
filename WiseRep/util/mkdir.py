@@ -32,13 +32,16 @@ def data(category = None, kind = None):
 	category: the supernova's category
 	kind: the data type that is needed (trimmed, demeaned, etc.)
 	'''
+	if type(category) == str:
+		categor = [category]
 	if category is not None:
-		if kind is not None:
-			if not os.path.isdir('supernova_data/' + category + '/data/' + kind):
-				os.makedirs('supernova_data/' + category + '/data/' + kind)
-		else:
-			if not os.path.isdir('supernova_data/' + category + '/data/'):
-				os.makedirs('supernova_data/' + category + '/data/')
+		for c in category:
+			if kind is not None:
+				if not os.path.isdir('supernova_data/' + c + '/data/' + kind):
+					os.makedirs('supernova_data/' + c + '/data/' + kind)
+			else:
+				if not os.path.isdir('supernova_data/' + c + '/data/'):
+					os.makedirs('supernova_data/' + c + '/data/')
 	else:
 		categories = get.types()
 		for category in categories:
@@ -54,6 +57,8 @@ def plots(category = None, kind = None):
 	category: the supernova's category
 	kind: the data type that is needed (trimmed, demeaned, etc.)
 	'''
+	if type(category) == str:
+		category = [category]
 	if category is not None:
 		for c in category:
 			if kind is not None:

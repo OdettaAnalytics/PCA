@@ -9,6 +9,7 @@ import h5py
 import optparse, sys
 
 WARNING = "Please enter the what you want to plot: python ploy.py [raw, interpolates, coefficients]."
+
 def raw(category = None):
 	data_path = get_data.raw(category)
 	mkdir.plots(category = None, kind = 'raw')
@@ -25,11 +26,26 @@ def raw(category = None):
 		plt.savefig(filename, format='eps', dpi = 3500)
 		plt.close()
 
+def deredshifts(category = None):
+	data_path = get_data.deredshift(category)
+	mkdir.plots(category = None, kind = data_type)
+	for data_file in data_path:
+		data_category = data_file.split('/')[1]
+		dataset = h5py.File(data_file, 'r')
+		for data_name in dataset:
+			wavelength = dataset[data_name][:, 0]
+			flux = dataset[data_name][:, 1]
+			plt.figure()
+			plt.plot(wavelength, flux)
+			plot_name = data_name
+			plt.title(plot_name)
+			filename = 'supernova_data/' + data_category + '/plots/' + data_type + '/' + data_name + '.eps'
+			plt.savefig(filename, format='eps', dpi = 3500)
+			plt.close()
+		dataset.close()
+
 def interpolates(category = None, data_type = 'log'):
-	if data_type == 'linear':	
-		data_path = get_data.linear(category)
-	else:
-		data_path = get_data.log(category)
+	data_path = get_data.interpolation(category)
 	mkdir.plots(category = None, kind = data_type)
 	for data_file in data_path:
 		data_category = data_file.split('/')[1]

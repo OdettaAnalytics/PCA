@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import os, os.path, glob, sys, optparse, h5py
 import util.get_data as get_data
 import util.mkdir as mkdir
+import util.convert_HDF5 as convert_HDF5
 
 def form_matrix(category = None, data_type = 'log'):
 	data_path = get_data.interpolation(category, data_type)
@@ -90,7 +91,6 @@ def compute_pca(data_matrix):
 		U = data_matrix[data_category]['svd']['U']
 		S = data_matrix[data_category]['svd']['S']
 		V = data_matrix[data_category]['svd']['V']
-
 		flux = data_matrix[data_category]['flux']
 		pca_matrix = (V.dot(S.T)).T
 		coefficients = (U.T).dot(flux.T)
@@ -122,6 +122,19 @@ def compute_K(data_matrix):
 		K_mat['normal'] = K
 		K_mat['reduced'] = K_reduced
 		data_matrix[data_category]['K'] = K_mat
+
+def save_pca(data_matrix):
+	for data_category in data_matrix:
+		data_filename = data_category + "_pca"
+		convert_HDF5.write(data_category, 'wavelength', data_filename, data_matrix[data_category]['wavelength'])
+		convert_HDF5.write(data_category, 'flux', data_filename, data_matrix[data_category]['flux'])
+		convert_HDF5.write(data_category, 'keys', data_filename, data_matrix[data_category]['keys'])
+		convert_HDF5.write(data_category, 'U', data_filename, data_matrix[data_category]['svd']['U'])
+		convert_HDF5.write(data_category, 'S', data_filename, data_matrix[data_category]['svd']['S'])
+		convert_HDF5.write(data_category, 'V', data_filename, data_matrix[data_category]['svd']['V'])
+		convert_HDF5.write(data_category, 'U', data_filename, data_matrix[data_category]['svd']['U'])
+		convert_HDF5.write(data_category, 'coefficients_normal', data_filename, data_matrix[data_category]['coefficients']['normal'])
+		convert_HDF5.write(data_category, 'coefficients_reduced', data_filename, data_matrix[data_category]['coefficients']['reduced'])
 
 def plot_components(data_matrix, category = None, pcomponents = [[0,1]], save = False, xranges = None, yranges = None, legend = False, show = True):
 	plots = []
@@ -223,6 +236,7 @@ def plot_raw_data(data_matrix, category = None, pcomponents = [[0,1]], xranges =
 	plt.ylabel('flux')
 	plt.show()
 
+
 def run(category = None, data_type = 'log', n = 10, pcomponents = [[0,1]], save = False, plot_comps = True, plot_raw = False, xranges = None, yranges = None, legend = False, compare = None, show = True):
 	data_matrix = form_matrix(category, data_type)
 	normalize(data_matrix)
@@ -231,6 +245,7 @@ def run(category = None, data_type = 'log', n = 10, pcomponents = [[0,1]], save 
 	svd(data_matrix)
 	compute_pca(data_matrix)
 	reduce_pca(data_matrix, n)
+	save_pca(data_matrix)
 	# compute_K(data_matrix)
 	if plot_comps:
 		plot_components(data_matrix, category, pcomponents, save, xranges, yranges, legend, show)

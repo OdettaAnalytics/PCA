@@ -67,13 +67,6 @@ def rebin(category = None, rebin_type = 'log'):
 		dataset.close()
 
 def coefficients(category = None, rebin_type = 'log'):
-	# data_matrix = pca.form_matrix(category, rebin_type)
-	# pca.normalize(data_matrix)
-	# pca.compute_mean(data_matrix)
-	# pca.demean(data_matrix)
-	# pca.svd(data_matrix)
-	# pca.compute_pca(data_matrix)
-	# pca.reduce_pca(data_matrix, n = 6)
 	data_path = get.data('pca', category)
 	colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
 	mkdir.plots(category = 'all', kind = 'pca/coefficients')

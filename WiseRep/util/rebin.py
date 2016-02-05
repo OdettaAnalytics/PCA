@@ -9,9 +9,8 @@ Outputs the interpolated spectra into a hdf5 file
 '''
 
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy import interpolate
-import os, os.path, glob, sys, optparse, h5py
+import h5py
 import util.get as get
 import util.convert_HDF5 as convert_HDF5
 

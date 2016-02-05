@@ -33,7 +33,7 @@ def data(category = None, kind = None):
 	kind: the data type that is needed (trimmed, demeaned, etc.)
 	'''
 	if type(category) == str:
-		categor = [category]
+		category = [category]
 	if category is not None:
 		for c in category:
 			if kind is not None:

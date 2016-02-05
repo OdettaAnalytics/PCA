@@ -3,7 +3,7 @@ __author__ = 'Leon Liang'
 import numpy as np
 import util.pca as pca
 import matplotlib.pyplot as plt
-import util.get_data as get_data
+import util.get as get
 import util.mkdir as mkdir
 import h5py
 import optparse, sys
@@ -11,7 +11,7 @@ import optparse, sys
 WARNING = "Please enter the what you want to plot: python ploy.py [raw, interpolates, coefficients]."
 
 def raw(category = None):
-	data_path = get_data.raw(category)
+	data_path = get.data('raw', category)
 	mkdir.plots(category = None, kind = 'raw')
 	for data_name in data_path:
 		spectrum = np.loadtxt(data_name)
@@ -28,9 +28,9 @@ def raw(category = None):
 		plt.savefig(filename, format='eps', dpi = 3500)
 		plt.close()
 
-def deredshifts(category = None):
-	data_path = get_data.deredshift(category)
-	mkdir.plots(category = None, kind = data_type)
+def deredshift(category = None):
+	data_path = get.data('deredshift', category)
+	mkdir.plots(category = None, kind = 'deredshift')
 	for data_file in data_path:
 		data_category = data_file.split('/')[1]
 		dataset = h5py.File(data_file, 'r')
@@ -43,12 +43,12 @@ def deredshifts(category = None):
 			plt.ylabel('flux')
 			plot_name = data_name
 			plt.title(plot_name)
-			filename = 'supernova_data/' + data_category + '/plots/' + data_type + '/' + data_name + '.eps'
+			filename = 'supernova_data/' + data_category + '/plots/deredshift/' + data_name + '.eps'
 			plt.savefig(filename, format='eps', dpi = 3500)
 			plt.close()
 		dataset.close()
 
-def interpolates(category = None, data_type = 'log'):
+def rebin(category = None, data_type = 'log'):
 	data_path = get_data.interpolation(category)
 	mkdir.plots(category = None, kind = data_type)
 	for data_file in data_path:
@@ -63,7 +63,7 @@ def interpolates(category = None, data_type = 'log'):
 			plt.ylabel('flux')
 			plot_name = data_name
 			plt.title(plot_name)
-			filename = 'supernova_data/' + data_category + '/plots/' + data_type + '/' + data_name + '.eps'
+			filename = 'supernova_data/' + data_category + '/plots/rebin_' + data_type + '/' + data_name + '.eps'
 			plt.savefig(filename, format='eps', dpi = 3500)
 			plt.close()
 		dataset.close()

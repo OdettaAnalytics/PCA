@@ -10,26 +10,41 @@ import util.convert_HDF5 as convert_HDF5
 def form_matrix(category = None, rebin_type = 'log'):
 	data_path = get.data('rebin', category, rebin_type)
 	data_matrix = {}
+	all_wavelength = np.array([], dtype = np.float64)
+	all_flux = np.array([], dtype = np.float64)
+	all_keys = []
 	for data_file in data_path:
 		data_mat = {}
-		all_wavelength = np.array([], dtype = np.float64)
-		all_flux = np.array([], dtype = np.float64)
+		category_wavelength = np.array([], dtype = np.float64)
+		category_flux = np.array([], dtype = np.float64)
 		data_category = data_file.split('/')[1]
 		dataset = h5py.File(data_file, 'r')
 		for data_name in dataset:
 			wavelength = dataset[data_name][:, 0]
 			flux = dataset[data_name][:, 1]
+			if len(category_wavelength) == 0:
+				category_wavelength = wavelength
+				category_flux = flux
+			else:
+				category_wavelength = np.vstack([category_wavelength, wavelength])
+				category_flux = np.vstack([category_flux, flux])
 			if len(all_wavelength) == 0:
 				all_wavelength = wavelength
 				all_flux = flux
 			else:
 				all_wavelength = np.vstack([all_wavelength, wavelength])
 				all_flux = np.vstack([all_flux, flux])
-		data_mat['wavelength'] = all_wavelength
-		data_mat['flux'] = all_flux
+		all_keys += dataset.keys()
+		data_mat['wavelength'] = category_wavelength
+		data_mat['flux'] = category_flux
 		data_mat['keys'] = np.array(dataset.keys(), dtype = str)
 		data_matrix[data_category] = data_mat
 		dataset.close()
+	data_mat = {}
+	data_mat['wavelength'] = all_wavelength
+	data_mat['flux'] = all_flux
+	data_mat['keys'] = np.array(all_keys, dtype = str)
+	data_matrix['all'] = data_mat
 	return data_matrix
 
 def normalize(data_matrix):

@@ -8,7 +8,7 @@ that other functions can then utilize
 
 import glob, sys
 
-def data(data_type, category = None, data_file = None, rebin_type = 'log'):
+def data(data_type, category = None, data_file = None, rebin_type = None):
 	if type(category) == str:
 		category = [category]
 

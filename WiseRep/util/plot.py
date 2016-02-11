@@ -96,7 +96,7 @@ def coefficients(category = None, rebin_type = 'log', n = 80, legend = True, sav
 		plt.close()
 
 def pcomponents(category = None, components = [[0,1]], legend = True, save = True, show = False):
-	data_path = get.data('pca', category)
+	data_path = get.data('pca', 'all')
 	mkdir.plots(category = 'all', kind = 'pca/pcomponents')
 	for component in components:
 		k = 0
@@ -129,30 +129,49 @@ def pcomponents(category = None, components = [[0,1]], legend = True, save = Tru
 		plt.close()
 
 def U_matrix(category = None, legend = True, save = True, show = False):
-	data_path = get.data('pca', category)
+	data_path = get.data('pca', 'all')
 	mkdir.plots(category = 'all', kind = 'pca/U')
+	mkdir.plots(category = 'all', kind = 'pca/individual_U')
+	wavelength = np.linspace(4000, 8000, 2000)
+	dataset = h5py.File(data_path[0], 'r')
+	U = dataset['U']
 	for i in range(2000):
 		plt.figure()
+		p = plt.plot(wavelength, U[:,i])
+		# if legend:
+		# 	plt.legend(plot_names, loc='right', bbox_to_anchor = (1.1, 0.2), fancybox = True)
+		plt.grid()
+		plt.xlabel('wavelength')
+		plt.ylabel('U[:,' + str(i) + ']')
+		plt.title('column ' + str(i) + ' of U')
+		if save:
+			name = 'supernova_data/all/plots/pca/individual_U/column_' + str(i) + '_of_U.eps'
+			plt.savefig(name, format='eps', dpi = 3500)
+		if show:
+			plt.show()
+		plt.close()
+	for j in range(0,2000,5):
+		plt.figure()
 		plot_names = []
-		plots = []
-		color_index = 0
-		offset = 0
-		for data_file in data_path:
-			data_category = data_file.split('/')[1]
-			dataset = h5py.File(data_file, 'r')
-			U = dataset['U']
-			p = plt.plot(U[:,i] + offset, color = COLORS[color_index%len(COLORS)], label = data_category)
-			plot_names.append(data_category)
-			plots.append(p)
-			color_index += 1
-			offset += max(U[:,i]) + 1
+		p1 = plt.plot(wavelength, U[:,j], color = COLORS[0], label = j)
+		offset = max(U[:,j]) + 0.2
+		p2 = plt.plot(wavelength, U[:,j+1] + offset, color = COLORS[1], label = j+1)
+		offset += max(U[:,j+1]) + 0.2
+		p3 = plt.plot(wavelength, U[:,j+2] + offset, color = COLORS[2], label = j+2)
+		offset += max(U[:,j+2]) + 0.2
+		p4 = plt.plot(wavelength, U[:,j+3] + offset, color = COLORS[3], label = j+3)
+		offset += max(U[:,j+3]) + 0.2
+		p5 = plt.plot(wavelength, U[:,j+4] + offset, color = COLORS[4], label = j+4)
+		plots = [p1, p2, p3, p4, p5]
+		plot_names = [str(j), str(j+1), str(j+2), str(j+3), str(j+4)]
+		plt.grid()
+		plt.xlabel('wavelength')
+		plt.ylabel('U[:,i]')
+		plt.title('columns ' + str(j) + ' ' + str(j+1) + ' ' + str(j+2) + ' ' + str(j+3) + ' ' + str(j+4) + ' of U')
 		if legend:
 			plt.legend(plot_names, loc='right', bbox_to_anchor = (1.1, 0.2), fancybox = True)
-		plt.grid()
-		plt.xlabel('U[:,' + str(i) + ']')
-		plt.title(str(i) + 'th column of U')
 		if save:
-			name = 'supernova_data/all/plots/pca/U/' + str(i) + 'th_column_of_U.eps'
+			name = 'supernova_data/all/plots/pca/U/columns_' + str(j) + '-' + str(j+4) + '_of_U.eps'
 			plt.savefig(name, format='eps', dpi = 3500)
 		if show:
 			plt.show()

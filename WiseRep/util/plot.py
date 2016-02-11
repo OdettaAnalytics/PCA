@@ -121,10 +121,44 @@ def pcomponents(category = None, components = [[0,1]], legend = True, save = Tru
 		plt.xlabel('c' + str(i))
 		plt.ylabel('c' + str(j))
 		plt.title('c' + str(i) + ' vs ' + 'c' + str(j))
-		name = 'supernova_data/all/plots/pca/pcomponents/' + 'c' + str(i) + '_vs_' + 'c' + str(j) + '.eps'
-		plt.savefig(name, format='eps', dpi = 3500)
+		if save:
+			name = 'supernova_data/all/plots/pca/pcomponents/' + 'c' + str(i) + '_vs_' + 'c' + str(j) + '.eps'
+			plt.savefig(name, format='eps', dpi = 3500)
 		if show:
 			plt.show()
+		plt.close()
+
+def U_matrix(category = None, legend = True, save = True, show = False):
+	data_path = get.data('pca', category)
+	mkdir.plots(category = 'all', kind = 'pca/U')
+	for i in range(2000):
+		plt.figure()
+		plot_names = []
+		plots = []
+		color_index = 0
+		offset = 0
+		for data_file in data_path:
+			data_category = data_file.split('/')[1]
+			dataset = h5py.File(data_file, 'r')
+			U = dataset['U']
+			p = plt.plot(U[:,i] + offset, color = COLORS[color_index%len(COLORS)], label = data_category)
+			plot_names.append(data_category)
+			plots.append(p)
+			color_index += 1
+			offset += max(U[:,i]) + 1
+		if legend:
+			plt.legend(plot_names, loc='right', bbox_to_anchor = (1.1, 0.2), fancybox = True)
+		plt.grid()
+		plt.xlabel('U[:,' + str(i) + ']')
+		plt.title(str(i) + 'th column of U')
+		if save:
+			name = 'supernova_data/all/plots/pca/U/' + str(i) + 'th_column_of_U.eps'
+			plt.savefig(name, format='eps', dpi = 3500)
+		if show:
+			plt.show()
+		plt.close()
+
+
 
 # parser = optparse.OptionParser()
 # parser.add_option("--rebin_type", dest = "rebin_type")

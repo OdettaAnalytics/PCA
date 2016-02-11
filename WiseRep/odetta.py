@@ -120,6 +120,8 @@ else:
 			plt.rebin(category, rebin_type)
 		elif opts.plot.lower() == 'coefficients':
 			plt.coefficients(category, rebin_type, num_coefs, legend, save, show)
+		elif opts.plot.lower() == 'u':
+			plt.U_matrix(category, legend, save, show)
 		else:
 			plt.pcomponents(category, components, legend, save, show)
 				

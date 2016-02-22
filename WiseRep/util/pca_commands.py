@@ -41,3 +41,17 @@ plt.xlabel('trimmed wavelength')
 plt.ylabel('flux')
 plt.legend(['min c1', 'near 0 c1'])
 plt.show()
+
+# plotting K_reduces
+
+data1 = get.data('pca', 'all')[0]
+f1 = h5py.File(data1, 'r')
+K_normal = f1['K_normal'][:,:]
+K_reduced = f1['K_reduced'][:,:]
+
+data2 = get.data('rebin', rebin_type = 'log')[0] # for type_Ia
+f2 = h5py.File(data2, 'r')
+rebin = f['GM13_0480_51989_024.dat'][:,:]
+
+wavelength = np.linspace(4000, 8000, 2000)
+

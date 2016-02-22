@@ -150,6 +150,9 @@ def save_pca(data_matrix):
 		convert_HDF5.write(data_category, 'U', data_filename, data_matrix[data_category]['svd']['U'])
 		convert_HDF5.write(data_category, 'coefficients_normal', data_filename, data_matrix[data_category]['coefficients']['normal'])
 		convert_HDF5.write(data_category, 'coefficients_reduced', data_filename, data_matrix[data_category]['coefficients']['reduced'])
+		convert_HDF5.write(data_category, 'K_normal', data_filename, data_matrix[data_category]['K']['normal'])
+		convert_HDF5.write(data_category, 'K_reduced', data_filename, data_matrix[data_category]['K']['reduced'])
+
 
 def run(category = None, data_type = 'log', n = 10):
 	data_matrix = form_matrix(category, data_type)
@@ -159,5 +162,6 @@ def run(category = None, data_type = 'log', n = 10):
 	svd(data_matrix)
 	compute_pca(data_matrix)
 	reduce_pca(data_matrix, n)
+	compute_K(data_matrix)
 	save_pca(data_matrix)
 

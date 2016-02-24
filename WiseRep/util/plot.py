@@ -177,7 +177,41 @@ def U_matrix(category = None, legend = True, save = True, show = False):
 			plt.show()
 		plt.close()
 
+def K_reduced(category = None, data_file = None, legend = True, save = True, show = False):
+	mkdir.plots('all', 'pca/K_reduced')
+	data_path = get.data('pca', 'all')
+	pca_dataset = h5py.File(data_path[0], 'r')
+	specific_spectrum_index = np.where(pca_dataset['keys'][:] == data_file)[0]
 
+	if specific_spectrum_index.shape[0] == 0:
+		print 'Cannot find specific spectrum entered.'
+		sys.exit()
+
+	specific_spectrum_index = specific_spectrum_index[0]
+	wavelength = pca_dataset['wavelength'][specific_spectrum_index,:]
+	flux = pca_dataset['flux'][specific_spectrum_index,:]
+	U = pca_dataset['U'][:,:]
+	U_reduced = np.zeros(U.shape)
+	for i in range(1, 31):
+		for j in range(i):
+			U_reduced[:,j] = U[:,j]
+
+		coefficients_reduced = (flux.dot(U_reduced)).T
+		K_reduced = (U_reduced.dot(coefficients_reduced)).T
+		plt.figure()
+		plt.plot(wavelength, flux, label = category)
+		plt.plot(wavelength, K_reduced, label = str(i - 1), color = 'red')
+		plt.xlabel('wavelength')
+		plt.ylabel('flux')
+		plt.title(category + '/' + data_file)
+		if legend:
+			plt.legend()
+		if save:
+			name = 'supernova_data/all/plots/pca/K_reduced/' + category + '_' + str(i - 1) + '.eps'
+			plt.savefig(name, format='eps', dpi = 3500)
+		if show:
+			plt.show()
+		plt.close()
 
 # parser = optparse.OptionParser()
 # parser.add_option("--rebin_type", dest = "rebin_type")

@@ -107,8 +107,8 @@ def compute_pca(data_matrix):
 		S = data_matrix[data_category]['svd']['S']
 		V = data_matrix[data_category]['svd']['V']
 		flux = data_matrix[data_category]['flux']
-		pca_matrix = (V.dot(S.T)).T
-		coefficients = (U.T).dot(flux.T)
+		pca_matrix = (S.dot(V)).T #(V.dot(S.T)).T
+		coefficients = (flux.dot(U)).T #(U.T).dot(flux.T)
 		data_matrix[data_category]['pca'] = pca_matrix
 		data_matrix[data_category]['coefficients']['normal'] = coefficients
 
@@ -119,7 +119,7 @@ def reduce_pca(data_matrix, n = 10):
 		U_reduced = np.zeros(U.shape)
 		for i in range(n):
 			U_reduced[:,i] = U[:,i]
-		coefficients_reduced = (U_reduced.T).dot(flux.T)
+		coefficients_reduced = (flux.dot(U_reduced)).T #(U_reduced.T).dot(flux.T)
 		data_matrix[data_category]['svd']['U_reduced'] = U_reduced
 		data_matrix[data_category]['coefficients']['reduced'] = coefficients_reduced
 
@@ -145,6 +145,7 @@ def save_pca(data_matrix):
 		convert_HDF5.write(data_category, 'flux', data_filename, data_matrix[data_category]['flux'])
 		convert_HDF5.write(data_category, 'keys', data_filename, data_matrix[data_category]['keys'])
 		convert_HDF5.write(data_category, 'U', data_filename, data_matrix[data_category]['svd']['U'])
+		convert_HDF5.write(data_category, 'U_reduced', data_filename, data_matrix[data_category]['svd']['U_reduced'])
 		convert_HDF5.write(data_category, 'S', data_filename, data_matrix[data_category]['svd']['S'])
 		convert_HDF5.write(data_category, 'V', data_filename, data_matrix[data_category]['svd']['V'])
 		convert_HDF5.write(data_category, 'U', data_filename, data_matrix[data_category]['svd']['U'])

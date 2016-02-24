@@ -48,13 +48,14 @@ data1 = get.data('pca', 'all')[0]
 f1 = h5py.File(data1, 'r')
 K_normal = f1['K_normal'][:,:]
 K_reduced = f1['K_reduced'][:,:]
-coefficients_reduced = f1['coefficients_reduced'][:].T
-coefficients_normal = f1['coefficients_normal'][:].T
+coefficients_reduced = f1['coefficients_reduced'][:]
+coefficients_normal = f1['coefficients_normal'][:]
 U = f1['U'][:,:]
+U_reduced = f1['U_reduced'][:,:]
 
 data2 = get.data('pca', 'type_Ia')[0]
 f2 = h5py.File(data2, 'r')
-i = np.where(f2['keys'][:] == 'GM13_0480_51989_024.dat')[0][0]
+i = np.where(f2['keys'][:] == 'G15_0304_51609_436.dat')[0][0]
 wavelength = f2['wavelength'][i,:]
 flux2 = f2['flux'][i,:]
 
@@ -73,11 +74,11 @@ f5 = h5py.File(data5, 'r')
 m = np.where(f5['keys'][:] == 'SN1993J_19931217_photcal.dat')[0][0]
 flux5 = f5['flux'][m,:]
 
-# plt.plot(wavelength, flux2, label = 'type_Ia')
+plt.plot(wavelength, flux2, label = 'type_Ia')
 # plt.plot(wavelength, flux3, label = 'type_IIP')
 # plt.plot(wavelength, flux4, label = 'type_Ib')
-plt.plot(wavelength, flux5, label = 'type_IIb')
-for i in range(4, 8):
+# plt.plot(wavelength, flux5, label = 'type_IIb')
+for i in range(0, 1):
 	plt.plot(wavelength, K_reduced[i,:], label = str(i))
 
 plt.legend()

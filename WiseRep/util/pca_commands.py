@@ -59,20 +59,20 @@ i = np.where(f2['keys'][:] == 'G15_0304_51609_436.dat')[0][0]
 wavelength = f2['wavelength'][i,:]
 flux2 = f2['flux'][i,:]
 
-data3 = get.data('pca', 'type_IIP')[0]
-f3 = h5py.File(data3, 'r')
-j = np.where(f3['keys'][:] == '2004dj_041115.ascii')[0][0]
-flux3 = f3['flux'][j,:]
+# data3 = get.data('pca', 'type_IIP')[0]
+# f3 = h5py.File(data3, 'r')
+# j = np.where(f3['keys'][:] == '2004dj_041115.ascii')[0][0]
+# flux3 = f3['flux'][j,:]
 
-data4 = get.data('pca', 'type_Ib')[0]
-f4 = h5py.File(data4, 'r')
-k = np.where(f4['keys'][:] == 'iPTF13bvn_28junflxc.dat')[0][0]
-flux4 = f4['flux'][k,:]
+# data4 = get.data('pca', 'type_Ib')[0]
+# f4 = h5py.File(data4, 'r')
+# k = np.where(f4['keys'][:] == 'iPTF13bvn_28junflxc.dat')[0][0]
+# flux4 = f4['flux'][k,:]
 
-data5 = get.data('pca', 'type_IIb')[0]
-f5 = h5py.File(data5, 'r')
-m = np.where(f5['keys'][:] == 'SN1993J_19931217_photcal.dat')[0][0]
-flux5 = f5['flux'][m,:]
+# data5 = get.data('pca', 'type_IIb')[0]
+# f5 = h5py.File(data5, 'r')
+# m = np.where(f5['keys'][:] == 'SN1993J_19931217_photcal.dat')[0][0]
+# flux5 = f5['flux'][m,:]
 
 plt.plot(wavelength, flux2, label = 'type_Ia')
 # plt.plot(wavelength, flux3, label = 'type_IIP')

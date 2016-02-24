@@ -33,8 +33,7 @@ parser.add_option("-n", dest = "n_comp")
 parser.add_option("--n_coefs", dest = "n_coefs")
 parser.add_option("-s", dest  = "save")
 parser.add_option("--show", dest  = "show")
-
-
+parser.add_option("-f", dest = "file")
 
 (opts, args) = parser.parse_args()
 
@@ -50,9 +49,15 @@ compare = None
 min_wave = 4000
 max_wave = 8000
 num_coefs = 80
+data_file = None
 
 if opts.category:
-	category = opts.category.split('[')[1].split(']')[0].split(',')
+	if '[' in opts.category and ']' in opts.category and ',' in opts.category:
+		category = opts.category.split('[')[1].split(']')[0].split(',')
+	elif ',' in opts.category:
+		category = opts.category.split(',')
+	else:
+		category = opts.category
 if opts.components:
 	comps = opts.components.split('[')[1].split(']')[0].split(',')
 	if len(comps) % 2 > 0:
@@ -91,6 +96,8 @@ if opts.n_coefs:
 	num_coefs = int(opts.n_coefs)
 if opts.show:
 	show = True
+if opts.file:
+	data_file = opts.file
 
 if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca or opts.plot):
 	trim.trim(min_wave, max_wave, category)
@@ -122,6 +129,8 @@ else:
 			plt.coefficients(category, rebin_type, num_coefs, legend, save, show)
 		elif opts.plot.lower() == 'u':
 			plt.U_matrix(category, legend, save, show)
+		elif opts.plot.lower() == 'k_reduced':
+			plt.K_reduced(category, data_file, legend, save, show)
 		else:
 			plt.pcomponents(category, components, legend, save, show)
 				

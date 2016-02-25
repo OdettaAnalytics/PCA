@@ -182,7 +182,7 @@ def K_reduced(category = None, data_file = None, legend = True, save = True, sho
 	data_path = get.data('pca', 'all')
 	pca_dataset = h5py.File(data_path[0], 'r')
 	specific_spectrum_index = np.where(pca_dataset['keys'][:] == data_file)[0]
-
+	
 	if specific_spectrum_index.shape[0] == 0:
 		print 'Cannot find specific spectrum entered.'
 		sys.exit()
@@ -192,22 +192,35 @@ def K_reduced(category = None, data_file = None, legend = True, save = True, sho
 	flux = pca_dataset['flux'][specific_spectrum_index,:]
 	U = pca_dataset['U'][:,:]
 	U_reduced = np.zeros(U.shape)
-	for i in range(1, 31):
-		for j in range(i):
+	for i in range(7):
+		offset = 0
+		for j in range(i+1):
 			U_reduced[:,j] = U[:,j]
 
 		coefficients_reduced = (flux.dot(U_reduced)).T
 		K_reduced = (U_reduced.dot(coefficients_reduced)).T
 		plt.figure()
 		plt.plot(wavelength, flux, label = category)
-		plt.plot(wavelength, K_reduced, label = str(i - 1), color = 'red')
+		plt.plot(wavelength, K_reduced, label = 'sum(0:' + str(i) + ')', color = 'red')
+		previous_single_K_reduced = 0
+		for k in range(i+1):
+			single_coefficients_reduced = (flux.dot(U_reduced[:,k])).T
+			single_K_reduced = (U_reduced[:,k].dot(single_coefficients_reduced)).T
+			if k == 0:
+				offset += max(single_K_reduced) - min(min(K_reduced), min(flux))
+			else:
+				offset += max(single_K_reduced) - min(min(previous_single_K_reduced), min(flux))
+			# offset += offset/50
+			plt.plot(wavelength, single_K_reduced - offset, label = str(k), color = 'black')
+			previous_single_K_reduced = single_K_reduced
+
 		plt.xlabel('wavelength')
 		plt.ylabel('flux')
 		plt.title(category + '/' + data_file)
 		if legend:
 			plt.legend()
 		if save:
-			name = 'supernova_data/all/plots/pca/K_reduced/' + category + '_' + str(i - 1) + '.eps'
+			name = 'supernova_data/all/plots/pca/K_reduced/' + category + '_' + str(i) + '.eps'
 			plt.savefig(name, format='eps', dpi = 3500)
 		if show:
 			plt.show()

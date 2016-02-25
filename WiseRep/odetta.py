@@ -87,10 +87,10 @@ if opts.n_comp:
 if opts.resolution:
 	resolution = int(opts.resolution)
 if opts.save:
-	if opts.save == 'False':
+	if opts.save.lower() == 'false':
 		save = False
 if opts.legend:
-	if opts.legend == 'False':
+	if opts.legend.lower() == 'false':
 		legend = False
 if opts.n_coefs:
 	num_coefs = int(opts.n_coefs)

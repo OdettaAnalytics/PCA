@@ -8,10 +8,9 @@ that other functions can then utilize
 
 import glob, sys
 
-def data(data_type, category = None, data_file = None, rebin_type = None):
+def data(data_type, category = None, rebin_type = None, data_file = None):
 	if type(category) == str:
 		category = [category]
-
 	if category is not None:
 		data_path = []
 		for c in category:

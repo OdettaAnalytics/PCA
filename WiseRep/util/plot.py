@@ -153,17 +153,11 @@ def U_matrix(category = None, legend = True, save = True, show = False):
 	for j in range(0,2000,5):
 		plt.figure()
 		plot_names = []
-		p1 = plt.plot(wavelength, U[:,j], color = COLORS[0], label = j)
-		offset = max(U[:,j]) + 0.2
-		p2 = plt.plot(wavelength, U[:,j+1] + offset, color = COLORS[1], label = j+1)
-		offset += max(U[:,j+1]) + 0.2
-		p3 = plt.plot(wavelength, U[:,j+2] + offset, color = COLORS[2], label = j+2)
-		offset += max(U[:,j+2]) + 0.2
-		p4 = plt.plot(wavelength, U[:,j+3] + offset, color = COLORS[3], label = j+3)
-		offset += max(U[:,j+3]) + 0.2
-		p5 = plt.plot(wavelength, U[:,j+4] + offset, color = COLORS[4], label = j+4)
-		plots = [p1, p2, p3, p4, p5]
-		plot_names = [str(j), str(j+1), str(j+2), str(j+3), str(j+4)]
+		for k in range(5):
+			p = plt.plot(wavelength, U[:,j+k], color = COLORS[k], label = str(j + k))
+			offset = max(U[:,j+k]) + 0.2
+			plots.append(p)
+			plot_names.append(str(j + k))
 		plt.grid()
 		plt.xlabel('wavelength')
 		plt.ylabel('U[:,i]')
@@ -277,7 +271,6 @@ def K_reduced(category = None, data_file = None, legend = True, save = True, sho
 # 	if opts.save == 'False':
 # 		save = False
 
-
 # if args[0] == 'raw':
 # 	raw(category)
 # elif args[0] == 'deredshift':
@@ -291,9 +284,3 @@ def K_reduced(category = None, data_file = None, legend = True, save = True, sho
 # else:
 # 	print 'Incorrect plot type entered. ' + WARNING
 # 	sys.exit()
-
-
-
-
-
-

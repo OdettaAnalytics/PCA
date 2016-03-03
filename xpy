@@ -216,8 +216,9 @@ if (opts.legend):
 if names:
    py.legend(names,loc=loc)
 
-if opts.ofile: 
-   py.savefig(opts.ofile)
+if opts.ofile:
+   plot_name = opts.ofile + '.eps' 
+   plt.savefig(plot_name, format='eps', dpi = 3500)
 else:
    py.show()
 

@@ -13,6 +13,7 @@ import util.demean as demean
 import util.rebin as rebin
 import util.pca as pca
 import util.plot as plt
+import util.mkdir as mkdir
 
 parser = optparse.OptionParser()
 parser.add_option("--trim", dest = "trim")
@@ -34,6 +35,7 @@ parser.add_option("--n_coefs", dest = "n_coefs")
 parser.add_option("-s", dest  = "save")
 parser.add_option("--show", dest  = "show")
 parser.add_option("-f", dest = "file")
+parser.add_option("--init", dest = "init")
 
 (opts, args) = parser.parse_args()
 
@@ -51,86 +53,95 @@ max_wave = 8000
 num_coefs = 80
 data_file = None
 
-if opts.category:
-	if '[' in opts.category and ']' in opts.category and ',' in opts.category:
-		category = opts.category.split('[')[1].split(']')[0].split(',')
-	elif ',' in opts.category:
-		category = opts.category.split(',')
+if opts.init:
+	if '[' in opts.init and ']' in opts.init and ',' in opts.init:
+		category = opts.init.split('[')[1].split(']')[0].split(',')
+	elif ',' in opts.init:
+		category = opts.init.split(',')
 	else:
-		category = opts.category
-if opts.components:
-	comps = opts.components.split('[')[1].split(']')[0].split(',')
-	if len(comps) % 2 > 0:
-		print 'Please enter an even number of principal components you want to analysis'
-		sys.exit()
-	else:
-		components = []
-		for i in range(0, len(comps) - 1, 2):
-			cx = int(comps[i])
-			cy = int(comps[i + 1])
-			components.append([cx, cy])
-if opts.rebin_type:
-	if opts.rebin_type == 'linear':
-		rebin_type = 'linear'
-	else:
-		rebin_type = 'log'
-if opts.wave_range:
-	min_wave = float(opts.wave_range[0])
-	max_wave = float(opts.wave_range[1])
+		category = opts.init
+	mkdir.init(category)
 else:
-	if opts.min_wave:
-		min_wave = float(opts.min_wave)
-	if opts.max_wave:
-		max_wave = float(opts.max_wave)
-if opts.n_comp:
-	n = int(opts.n_comp)
-if opts.resolution:
-	resolution = int(opts.resolution)
-if opts.save:
-	if opts.save.lower() == 'false':
-		save = False
-if opts.legend:
-	if opts.legend.lower() == 'false':
-		legend = False
-if opts.n_coefs:
-	num_coefs = int(opts.n_coefs)
-if opts.show:
-	show = True
-if opts.file:
-	data_file = opts.file
-
-if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca or opts.plot):
-	trim.trim(min_wave, max_wave, category)
-	deredshift.deredshift(category)
-	demean.demean_flux(category)
-	rebin.run(min_wave, max_wave, resolution, category, rebin_type)
-	pca.run(category, rebin, n)
-	plt.pcomponents(category, components, legend, save, show)
-
-else:
-	if opts.trim:
-		trim.trim(min_wave, max_wave, category)
-	if opts.deredshift:
-		deredshift.deredshift(category)
-	if opts.demean:
-		demean.demean_flux(category)
-	if opts.rebin:
-		rebin.run(min_wave, max_wave, resolution, category, rebin_type)
-	if opts.pca:
-		pca.run(category, rebin, n)
-	if opts.plot:
-		if opts.plot.lower() == 'raw':
-			plt.raw(category)
-		elif opts.plot.lower() == 'deredshift':
-			plt.deredshift(category)
-		elif opts.plot.lower() == 'rebin':
-			plt.rebin(category, rebin_type)
-		elif opts.plot.lower() == 'coefficients':
-			plt.coefficients(category, rebin_type, num_coefs, legend, save, show)
-		elif opts.plot.lower() == 'u':
-			plt.U_matrix(category, legend, save, show)
-		elif opts.plot.lower() == 'k_reduced':
-			plt.K_reduced(category, data_file, legend, save, show)
+	if opts.category:
+		if '[' in opts.category and ']' in opts.category and ',' in opts.category:
+			category = opts.category.split('[')[1].split(']')[0].split(',')
+		elif ',' in opts.category:
+			category = opts.category.split(',')
 		else:
-			plt.pcomponents(category, components, legend, save, show)
+			category = opts.category
+	if opts.components:
+		comps = opts.components.split('[')[1].split(']')[0].split(',')
+		if len(comps) % 2 > 0:
+			print 'Please enter an even number of principal components you want to analysis'
+			sys.exit()
+		else:
+			components = []
+			for i in range(0, len(comps) - 1, 2):
+				cx = int(comps[i])
+				cy = int(comps[i + 1])
+				components.append([cx, cy])
+	if opts.rebin_type:
+		if opts.rebin_type == 'linear':
+			rebin_type = 'linear'
+		else:
+			rebin_type = 'log'
+	if opts.wave_range:
+		min_wave = float(opts.wave_range[0])
+		max_wave = float(opts.wave_range[1])
+	else:
+		if opts.min_wave:
+			min_wave = float(opts.min_wave)
+		if opts.max_wave:
+			max_wave = float(opts.max_wave)
+	if opts.n_comp:
+		n = int(opts.n_comp)
+	if opts.resolution:
+		resolution = int(opts.resolution)
+	if opts.save:
+		if opts.save.lower() == 'false':
+			save = False
+	if opts.legend:
+		if opts.legend.lower() == 'false':
+			legend = False
+	if opts.n_coefs:
+		num_coefs = int(opts.n_coefs)
+	if opts.show:
+		show = True
+	if opts.file:
+		data_file = opts.file
+
+	if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca or opts.plot):
+		trim.trim(min_wave, max_wave, category)
+		deredshift.deredshift(category)
+		demean.demean_flux(category)
+		rebin.run(min_wave, max_wave, resolution, category, rebin_type)
+		pca.run(category, rebin, n)
+		plt.pcomponents(category, components, legend, save, show)
+
+	else:
+		if opts.trim:
+			trim.trim(min_wave, max_wave, category)
+		if opts.deredshift:
+			deredshift.deredshift(category)
+		if opts.demean:
+			demean.demean_flux(category)
+		if opts.rebin:
+			rebin.run(min_wave, max_wave, resolution, category, rebin_type)
+		if opts.pca:
+			pca.run(category, rebin, n)
+		if opts.plot:
+			if opts.plot.lower() == 'raw':
+				plt.raw(category)
+			elif opts.plot.lower() == 'deredshift':
+				plt.deredshift(category)
+			elif opts.plot.lower() == 'rebin':
+				plt.rebin(category, rebin_type)
+			elif opts.plot.lower() == 'coefficients':
+				plt.coefficients(category, rebin_type, num_coefs, legend, save, show)
+			elif opts.plot.lower() == 'u':
+				plt.U_matrix(category, legend, save, show)
+			elif opts.plot.lower() == 'k_reduced':
+				plt.K_reduced(category, data_file, legend, save, show)
+			else:
+				plt.pcomponents(category, components, legend, save, show)
 				

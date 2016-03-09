@@ -36,21 +36,19 @@ def data(category = None, kind = None):
 		category = [category]
 	if category is not None:
 		for c in category:
+			if not os.path.isdir('supernova_data/' + c + "/data"):
+				os.makedirs('supernova_data/' + c + '/data')
 			if kind is not None:
 				if not os.path.isdir('supernova_data/' + c + '/data/' + kind):
 					os.makedirs('supernova_data/' + c + '/data/' + kind)
-			else:
-				if not os.path.isdir('supernova_data/' + c + '/data/'):
-					os.makedirs('supernova_data/' + c + '/data/')
 	else:
 		categories = get.types()
 		for category in categories:
+			if not os.path.isdir('supernova_data/' + c + "/data"):
+				os.makedirs('supernova_data/' + c + '/data/')
 			if kind is not None:
 				if not os.path.isdir('supernova_data/' + category + '/data/' + kind):
 					os.makedirs('supernova_data/' + category + '/data/' + kind)
-			else:
-				if not os.path.isdir('supernova_data/' + category + '/data/'):
-					os.makedirs('supernova_data/' + category + '/data/')
 
 def plots(category = None, kind = None):
 	'''
@@ -61,21 +59,19 @@ def plots(category = None, kind = None):
 		category = [category]
 	if category is not None:
 		for c in category:
+			if not os.path.isdir('supernova_data/' + c + "/plots"):
+				os.makedirs('supernova_data/' + c + '/plots')
 			if kind is not None:
 				if not os.path.isdir('supernova_data/' + c + '/plots/' + kind):
 					os.makedirs('supernova_data/' + c + '/plots/' + kind)
-			else:
-				if not os.path.isdir('supernova_data/' + c + '/plots/'):
-					os.makedirs('supernova_data/' + c + '/plots/')
 	else:
 		categories = get.types()
 		for category in categories:
+			if not os.path.isdir('supernova_data/' + c + "/plots"):
+				os.makedirs('supernova_data/' + c + '/plots')
 			if kind is not None:
 				if not os.path.isdir('supernova_data/' + category + '/plots/' + kind):
 					os.makedirs('supernova_data/' + category + '/plots/' + kind)
-			else:
-				if not os.path.isdir('supernova_data/' + category + '/plots/'):
-					os.makedirs('supernova_data/' + category + '/plots/')
 
 # def remove(category=None, kind=None):
 

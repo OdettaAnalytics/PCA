@@ -23,9 +23,11 @@ def init(categories):
 	'''
 	categories: a list of supernova categories
 	'''
+	if type(categories) == str:
+		categories = [categories]
 	for category in categories:
 		if not os.path.isdir('supernova_data/' + category):
-			os.makekdirs('supernova_data/' + category)
+			os.makedirs('supernova_data/' + category)
 
 def data(category = None, kind = None):
 	'''

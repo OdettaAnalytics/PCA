@@ -45,6 +45,6 @@ def run(min_wave = 4000, max_wave = 8000, resolution = 2000, category = None, re
 			f = f_x[str(data_name)]
 			new_flux = f(new_wavelength)
 			new_rebin_data = np.vstack([new_wavelength, new_flux]).T
-			data_type = data_category + '_rebin_' + rebin_type
-			convert_HDF5.write(data_category, str(data_name), data_type, new_rebin_data)
+			data_filename = data_category + '_rebin_' + rebin_type
+			convert_HDF5.write(data_category, str(data_name), data_filename, new_rebin_data)
 

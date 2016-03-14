@@ -14,3 +14,4 @@ supernova_data/
 WiseRep/*.eps
 WiseRep/spark_test/
 WiseRep/odetta_data.tar.gz
+WiseRep/example_numpy.py

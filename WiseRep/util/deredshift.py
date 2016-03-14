@@ -49,8 +49,8 @@ def deredshift(category = None):
 			for i in range(columns):
 				deredshift_spectrum = np.vstack([deredshift_spectrum, rest_of_spectrum[:,i]])
 			deredshift_spectrum = deredshift_spectrum.T
-			data_type = data_category + '_' + 'deredshift'
-			convert_HDF5.write(data_category, str(data_name), data_type, deredshift_spectrum)
+			data_filename = data_category + '_' + 'deredshift'
+			convert_HDF5.write(data_category, str(data_name), data_filename, deredshift_spectrum)
 
 # if __name__ == '__main__':
 # 	deredshift()

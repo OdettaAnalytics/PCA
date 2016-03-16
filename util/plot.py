@@ -220,7 +220,6 @@ def K_reduced(category = None, data_file = None, legend = True, save = True, sho
 		if show:
 			plt.show()
 		plt.close()
-	np.savetxt('coefficients_reduced.txt', coefficients_reduced[:6])
 
 
 # parser = optparse.OptionParser()

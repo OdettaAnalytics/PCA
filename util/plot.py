@@ -8,7 +8,7 @@ import util.mkdir as mkdir
 import h5py
 import optparse, sys
 
-WARNING = "Please enter the what you want to plot: python ploy.py [raw, interpolates, coefficients]."
+WARNING = "Please enter the what you want to plot: python ploy.py [raw, deredshift, rebin, coefficients, pcomponents, U_matrix, ]."
 COLORS = ['blue', 'green', 'red', 'cyan', 'magenta', 'purple', 'black']
 
 def raw(category = None):
@@ -147,8 +147,6 @@ def U_matrix(category = None, legend = True, save = True, show = False):
 	for i in range(2000):
 		plt.figure()
 		p = plt.plot(wavelength, U[:,i])
-		# if legend:
-		# 	plt.legend(plot_names, loc='right', bbox_to_anchor = (1.1, 0.2), fancybox = True)
 		plt.grid()
 		plt.xlabel('wavelength')
 		plt.ylabel('U[:,' + str(i) + ']')
@@ -229,69 +227,3 @@ def K_reduced(category = None, data_file = None, legend = True, save = True, sho
 		if show:
 			plt.show()
 		plt.close()
-
-
-# parser = optparse.OptionParser()
-# parser.add_option("--rebin_type", dest = "rebin_type")
-# parser.add_option("--category", dest = "category")
-# parser.add_option("--components", dest = "components")
-# parser.add_option("--legend", dest = "legend")
-# parser.add_option("--show", dest = "show")
-# parser.add_option("-s", dest = "save")
-
-# (opts, args) = parser.parse_args()
-
-# if len(args) == 0:
-# 	print WARNING
-# 	sys.exit()
-
-# rebin_type = 'log'
-# if opts.rebin_type:
-# 	if opts.rebin_type == 'linear':
-# 		rebin_type = 'linear'
-
-
-# category = None
-# if opts.category:
-# 	category = opts.category.split('[')[1].split(']')[0].split(',')
-
-# components = [[0,1]]
-# if opts.components:
-# 	pcomps = opts.components.split('[')[1].split(']')[0].split(',')
-# 	if len(pcomps)%2 != 0:
-# 		print 'Please enter an even number of principal components you want to analysis'
-# 		sys.exit()
-# 	else:
-# 		components = []
-# 		for i in range(0, len(pcomps) - 1, 2):
-# 			cx = int(pcomps[i])
-# 			cy = int(pcomps[i + 1])
-# 			components.append([cx, cy])
-
-# show = False
-# if opts.show:
-# 	show = True
-
-# legend = True
-# if opts.legend:
-# 	if opts.legend == 'False':
-# 		legend = False
-
-# save = True
-# if opts.save:
-# 	if opts.save == 'False':
-# 		save = False
-
-# if args[0] == 'raw':
-# 	raw(category)
-# elif args[0] == 'deredshift':
-# 	deredshift(category)
-# elif args[0] == 'rebin':
-# 	rebin(category, rebin_type)
-# elif args[0] == 'coefficients':
-# 	coefficients(category, rebin)
-# elif args[0] == 'pcomponents':
-# 	pcomponents(category, components, legend, save, show)
-# else:
-# 	print 'Incorrect plot type entered. ' + WARNING
-# 	sys.exit()

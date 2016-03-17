@@ -8,7 +8,7 @@ import util.mkdir as mkdir
 import h5py
 import optparse, sys
 
-WARNING = "Please enter the what you want to plot: python ploy.py [raw, deredshift, rebin, coefficients, pcomponents, U_matrix, ]."
+WARNING = "Please enter the what you want to plot: python ploy.py [raw, deredshift, rebin, coefficients, pcomponents, U_matrix, K_reduced]."
 COLORS = ['blue', 'green', 'red', 'cyan', 'magenta', 'purple', 'black']
 
 def raw(category = None):

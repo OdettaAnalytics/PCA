@@ -26,8 +26,12 @@ def data(data_type, category = None, rebin_type = None, data_file = None):
 	else:
 		if data_type == 'raw':
 			return glob.glob('supernova_data/type*/data/raw_data/*')
-		elif data_type == 'interpolation':
-			data_path += (glob.glob('supernova_data/type*/data/*' + rebin_type + '*'))
+		elif data_type == 'rebin':
+			if rebin_type == None:
+				rebin_type = 'log'
+			return glob.glob('supernova_data/type*/data/*' + rebin_type + '*')
+		elif data_type == 'all':
+			return glob.glob('supernova_data/all/data/all_pca.hdf5')
 		else:
 			return glob.glob('supernova_data/type*/data/*' + data_type + '*')
 

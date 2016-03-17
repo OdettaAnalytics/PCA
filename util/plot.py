@@ -70,14 +70,18 @@ def rebin(category = None, rebin_type = 'log'):
 def coefficients(category = None, rebin_type = 'log', n = 80, legend = True, save = True, show = False):
 	data_path = get.data('pca', category)
 	mkdir.plots(category = 'all', kind = 'pca/coefficients')
-	for i in range(n + 1):
+	all_pca = get.data('all')
+	all_pca = h5py.File(all_pca[0], 'r')
+	U = all_pca['U']
+	for i in range(n):
 		x = np.zeros([100])
 		k = 0
 		plt.figure()
 		for data_file in data_path:
 			data_category = data_file.split('/')[1]
 			dataset = h5py.File(data_file, 'r')	
-			coefficients_normal = dataset['coefficients_normal']
+			flux = dataset['flux'][:]
+			coefficients_normal = (flux.dot(U)).T
 			[m,n] = coefficients_normal.shape
 			plt.scatter(x[:n], coefficients_normal[i,:], color = COLORS[k%len(COLORS)], label = data_category)
 			x += 1
@@ -94,10 +98,14 @@ def coefficients(category = None, rebin_type = 'log', n = 80, legend = True, sav
 		if show:
 			plt.show()
 		plt.close()
+	all_pca.close()
 
 def pcomponents(category = None, components = [[0,1]], legend = True, save = True, show = False):
-	data_path = get.data('pca', 'all')
+	data_path = get.data('pca', category)
 	mkdir.plots(category = 'all', kind = 'pca/pcomponents')
+	all_pca = get.data('all')
+	all_pca = h5py.File(all_pca[0], 'r')
+	U_reduced = all_pca['U_reduced']
 	for component in components:
 		k = 0
 		plots = []
@@ -108,7 +116,8 @@ def pcomponents(category = None, components = [[0,1]], legend = True, save = Tru
 		for data_file in data_path:
 			data_category = data_file.split('/')[1]
 			dataset = h5py.File(data_file, 'r')	
-			coefficients_reduced = dataset['coefficients_reduced']
+			flux = dataset['flux'][:]
+			coefficients_reduced = (flux.dot(U_reduced)).T
 			cx = coefficients_reduced[i,:]
 			cy = coefficients_reduced[j,:]
 			p = plt.scatter(cx, cy, color = COLORS[k%len(COLORS)], label = category)

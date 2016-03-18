@@ -69,7 +69,7 @@ def plots(category = None, kind = None):
 					os.makedirs('supernova_data/' + c + '/plots/' + kind)
 	else:
 		categories = get.types()
-		for c in category:
+		for c in categories:
 			if not os.path.isdir('supernova_data/' + c + "/plots"):
 				os.makedirs('supernova_data/' + c + '/plots')
 			if kind is not None:

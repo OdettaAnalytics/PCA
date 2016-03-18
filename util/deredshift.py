@@ -8,7 +8,7 @@ for its supernova
 Outputs deredshifted spectra into a hdf5 file
 '''
 
-import numpy as np
+import numpy as np, sys
 import util.get as get
 import util.mkdir as mkdir
 import util.convert_HDF5 as convert_HDF5

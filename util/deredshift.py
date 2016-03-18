@@ -22,35 +22,33 @@ def extract_z_values(object_z_file):
 		z_values[i] = float(object_zvalues[i+1, 1])
 	return object_names, z_values
 
-def deredshift(category = None):
-	data_path = get.data('trim', category)
+def run(category = None):
+	data_path = get.data('raw', category)
 	object_z_file = get.z_value()
 	object_names, z_values = extract_z_values(object_z_file)
-	num_objects = len(object_names)
 	for data_file in data_path:
-		dataset = h5py.File(data_file, 'r')
-		data_category = data_file.split('/')[1]
-		for data_name in dataset:
-			name = str(data_name.split('.')[0])
-			spectrum = dataset[data_name][:,:]
-			wavelength = spectrum[:, 0]
-			rest_of_spectrum = spectrum[:, 1:]
-			z_value = None
-			for j in range(num_objects):
-				if (name.find(object_names[j]) != -1):
-					z_value = z_values[j]
-					break
-			if z_value is None:
-				print 'No such z value for ' + str(data_name)
-				sys.exit()
-			deredshift_wavelength = wavelength/(1 + z_value)
-			deredshift_spectrum = deredshift_wavelength
-			[rows, columns] = rest_of_spectrum.shape
-			for i in range(columns):
-				deredshift_spectrum = np.vstack([deredshift_spectrum, rest_of_spectrum[:,i]])
-			deredshift_spectrum = deredshift_spectrum.T
-			data_filename = data_category + '_' + 'deredshift'
-			convert_HDF5.write(data_category, str(data_name), data_filename, deredshift_spectrum)
+		filename = data_file.split('/')
+		data_category = filename[1]
+		data_name = filename[len(filename)-1]
+		name = data_name.split('.')[0]
+		spectrum = np.loadtxt(data_file)
+		wavelength = spectrum[:, 0]
+		rest_of_spectrum = spectrum[:, 1:]
+		z_value = None
+		for j in range(len(object_names)):
+			if (name.find(object_names[j]) != -1):
+				z_value = z_values[j]
+				break
+		if z_value is None:
+			print 'Cannot find z value for ' + str(data_name)
+			sys.exit()
+		deredshift_wavelength = wavelength/(1 + z_value)
+		deredshift_spectrum = deredshift_wavelength
+		[rows, columns] = rest_of_spectrum.shape
+		for i in range(columns):
+			deredshift_spectrum = np.vstack([deredshift_spectrum, rest_of_spectrum[:,i]])
+		deredshift_spectrum = deredshift_spectrum.T
+		data_filename = data_category + '_' + 'deredshift'
+		convert_HDF5.write(data_category, str(data_name), data_filename, deredshift_spectrum)
 
-# if __name__ == '__main__':
-# 	deredshift()
+deredshift()

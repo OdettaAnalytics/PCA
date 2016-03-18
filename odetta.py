@@ -120,7 +120,6 @@ if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca or
 	rebin.run(min_wave, max_wave, n_rebin, category, rebin_type)
 	pca.run(category, rebin, n)
 	plt.pcomponents(category, components, legend, save, show)
-
 else:
 	if opts.trim:
 		trim.trim(min_wave, max_wave, category)

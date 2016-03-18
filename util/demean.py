@@ -40,10 +40,3 @@ def demean_flux(category = None):
 			demeaned_spectrum = demeaned_spectrum.T 
 			data_filename = data_category + '_' + 'demean'
 			convert_HDF5.write(data_category, str(data_name), data_filename, demeaned_spectrum)
-
-# if __name__ == '__main__':
-# 	demean_flux()
-
-
-
-

@@ -31,7 +31,7 @@ def interpolation(min_wave, max_wave, category = None):
 			f_x[data_name] = f
 	return f_x
 
-def run(min_wave = 4000, max_wave = 8000, resolution = 2000, category = None, rebin_type = 'log'):
+def run(min_wave = 4000, max_wave = 8000, n_rebin = 2000, category = None, rebin_type = 'log'):
 	f_x = interpolation(min_wave, max_wave, category)
 	data_path = get.data('demean', category)
 	for data_file in data_path:
@@ -39,9 +39,9 @@ def run(min_wave = 4000, max_wave = 8000, resolution = 2000, category = None, re
 		data_category = data_file.split('/')[1]
 		for data_name in dataset:
 			if rebin_type == 'linear':
-				new_wavelength = np.linspace(min_wave, max_wave, num = resolution, endpoint = False)
+				new_wavelength = np.linspace(min_wave, max_wave, num = n_rebin, endpoint = False)
 			else:
-				new_wavelength = np.logspace(np.log10(min_wave), np.log10(max_wave), num = resolution, endpoint = False)
+				new_wavelength = np.logspace(np.log10(min_wave), np.log10(max_wave), num = n_rebin, endpoint = False)
 			f = f_x[str(data_name)]
 			new_flux = f(new_wavelength)
 			new_rebin_data = np.vstack([new_wavelength, new_flux]).T

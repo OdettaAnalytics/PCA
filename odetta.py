@@ -27,7 +27,7 @@ parser.add_option("--wave_range", dest = "wave_range")
 parser.add_option("--min_wave", dest = "min_wave")
 parser.add_option("--max_wave", dest = "max_wave")
 parser.add_option("--components", dest = "components")
-parser.add_option("--resolution", dest = "resolution")
+parser.add_option("--n_rebin", dest = "n_rebin")
 parser.add_option("--legend", dest = "legend")
 parser.add_option("--plot", dest = "plot")
 parser.add_option("-n", dest = "n_comp")
@@ -45,7 +45,7 @@ components = [[0,1]]
 category = None
 legend = True
 n = 6
-resolution = 2000
+n_rebin = 2000
 save = True
 rebin_type = 'log'
 show = False
@@ -98,8 +98,8 @@ else:
 		max_wave = float(opts.max_wave)
 if opts.n_comp:
 	n = int(opts.n_comp)
-if opts.resolution:
-	resolution = int(opts.resolution)
+if opts.n_rebin:
+	n_rebin = int(opts.n_rebin)
 if opts.save:
 	if opts.save.lower() == 'false':
 		save = False
@@ -117,7 +117,7 @@ if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca or
 	trim.trim(min_wave, max_wave, category)
 	deredshift.deredshift(category)
 	demean.demean_flux(category)
-	rebin.run(min_wave, max_wave, resolution, category, rebin_type)
+	rebin.run(min_wave, max_wave, n_rebin, category, rebin_type)
 	pca.run(category, rebin, n)
 	plt.pcomponents(category, components, legend, save, show)
 
@@ -129,7 +129,7 @@ else:
 	if opts.demean:
 		demean.demean_flux(category)
 	if opts.rebin:
-		rebin.run(min_wave, max_wave, resolution, category, rebin_type)
+		rebin.run(min_wave, max_wave, n_rebin, category, rebin_type)
 	if opts.pca:
 		pca.run(category, rebin, n)
 	if opts.plot:

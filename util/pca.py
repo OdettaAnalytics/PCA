@@ -105,13 +105,8 @@ def compute_pca(data_matrix):
 	U = data_matrix[data_category]['svd']['U']
 	for data_category in data_matrix:
 		data_matrix[data_category]['coefficients'] = {}
-		# U = data_matrix[data_category]['svd']['U']
-		# S = data_matrix[data_category]['svd']['S']
-		# V = data_matrix[data_category]['svd']['V']
 		flux = data_matrix[data_category]['flux']
-		# pca_matrix = (S.dot(V)).T 
 		coefficients = (flux.dot(U)).T
-		# data_matrix[data_category]['pca'] = pca_matrix
 		data_matrix[data_category]['coefficients']['normal'] = coefficients
 
 def reduce_pca(data_matrix, n = 10):
@@ -123,9 +118,7 @@ def reduce_pca(data_matrix, n = 10):
 	data_matrix[data_category]['svd']['U_reduced'] = U_reduced
 	for data_category in data_matrix:
 		flux = data_matrix[data_category]['flux']
-		# U = data_matrix[data_category]['svd']['U']
 		coefficients_reduced = (flux.dot(U_reduced)).T #(U_reduced.T).dot(flux.T)
-		# data_matrix[data_category]['svd']['U_reduced'] = U_reduced
 		data_matrix[data_category]['coefficients']['reduced'] = coefficients_reduced
 
 def compute_K(data_matrix):
@@ -136,10 +129,6 @@ def compute_K(data_matrix):
 		K_mat = {}
 		coefficients = data_matrix[data_category]['coefficients']['normal']
 		coefficients_reduced = data_matrix[data_category]['coefficients']['reduced']
-		# U = data_matrix[data_category]['svd']['U']
-		# S = data_matrix[data_category]['svd']['S']
-		# V = data_matrix[data_category]['svd']['V']
-		# U_reduced = data_matrix[data_category]['svd']['U_reduced']
 		K = (U.dot(coefficients)).T
 		K_reduced = (U_reduced.dot(coefficients_reduced)).T
 		K_mat['normal'] = K

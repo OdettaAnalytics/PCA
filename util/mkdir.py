@@ -73,8 +73,8 @@ def plots(category = None, kind = None):
 			if not os.path.isdir('supernova_data/' + c + "/plots"):
 				os.makedirs('supernova_data/' + c + '/plots')
 			if kind is not None:
-				if not os.path.isdir('supernova_data/' + category + '/plots/' + kind):
-					os.makedirs('supernova_data/' + category + '/plots/' + kind)
+				if not os.path.isdir('supernova_data/' + c + '/plots/' + kind):
+					os.makedirs('supernova_data/' + c + '/plots/' + kind)
 
 # def remove(category=None, kind=None):
 

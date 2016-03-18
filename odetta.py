@@ -114,7 +114,7 @@ if opts.file:
 	data_file = opts.file
 
 if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca or opts.plot):
-	trim.trim(min_wave, max_wave, category)
+	trim.run(min_wave, max_wave, category)
 	deredshift.run(category)
 	demean.demean_flux(category)
 	rebin.run(min_wave, max_wave, n_rebin, category, rebin_type)
@@ -122,7 +122,7 @@ if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca or
 	plt.pcomponents(category, components, legend, save, show)
 else:
 	if opts.trim:
-		trim.trim(min_wave, max_wave, category)
+		trim.run(min_wave, max_wave, category)
 	if opts.deredshift:
 		deredshift.run(category)
 	if opts.demean:

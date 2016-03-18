@@ -12,7 +12,7 @@ import numpy as np
 import util.get as get
 import util.convert_HDF5 as convert_HDF5
 
-def trim(min_wave = 4000, max_wave = 8000, category = None):
+def run(min_wave = 4000, max_wave = 8000, category = None):
 	data_path = get.data('raw', category)
 	for data in data_path:
 		spectrum = np.loadtxt(data)

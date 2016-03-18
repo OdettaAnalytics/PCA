@@ -55,40 +55,40 @@ def normalize(data_matrix):
 				flux[i,:] /= np.linalg.norm(flux[i,:])
 
 def compute_mean(data_matrix):
-	for data_category in data_matrix:
-		mu_matrix = {}
-		flux = data_matrix[data_category]['flux']
-		flux_mu = np.zeros(flux.shape)
-		for i in range(len(flux)):
-			flux_mu[i] = np.mean(flux[i,:])
-		mu_matrix['flux'] = flux_mu
-		data_matrix[data_category]['mu'] = mu_matrix
+	data_category = 'all'
+	mu_matrix = {}
+	flux = data_matrix[data_category]['flux']
+	flux_mu = np.zeros(flux.shape)
+	for i in range(len(flux)):
+		flux_mu[i] = np.mean(flux[i,:])
+	mu_matrix['flux'] = flux_mu
+	data_matrix[data_category]['mu'] = mu_matrix
 
 
 def demean(data_matrix):
 	compute_mean(data_matrix)
-	for data_category in data_matrix:
-		flux = data_matrix[data_category]['flux']
-		mu_matrix = data_matrix[data_category]['mu']
-		for i in range(len(flux)):
-			flux[i,:] -= mu_matrix['flux'][i]
+	data_category = 'all'
+	flux = data_matrix[data_category]['flux']
+	mu_matrix = data_matrix[data_category]['mu']
+	for i in range(len(flux)):
+		flux[i,:] -= mu_matrix['flux'][i]
 
 def svd(data_matrix):
-	for data_category in data_matrix:
-		svd_mat = {}
-		flux = data_matrix[data_category]['flux'].T
-		[U, s, V_T] = np.linalg.svd(flux)
-		[m, n] = flux.shape
-		S = np.zeros([m, n])
-		if (m < n):
-			for i in range(m):
-				S[i,i] = s[i] 											
-		else:
-			S[:n,:n] = np.diag(s)
-		svd_mat['U'] = U
-		svd_mat['S'] = S
-		svd_mat['V'] = V_T.T
-		data_matrix[data_category]['svd'] = svd_mat
+	data_category = 'all'
+	svd_mat = {}
+	flux = data_matrix[data_category]['flux'].T
+	[U, s, V_T] = np.linalg.svd(flux)
+	[m, n] = flux.shape
+	S = np.zeros([m, n])
+	if (m < n):
+		for i in range(m):
+			S[i,i] = s[i] 											
+	else:
+		S[:n,:n] = np.diag(s)
+	svd_mat['U'] = U
+	svd_mat['S'] = S
+	svd_mat['V'] = V_T.T
+	data_matrix[data_category]['svd'] = svd_mat
 
 def dot_product(data_matrix):
 	from numpy import dot
@@ -101,37 +101,45 @@ def dot_product(data_matrix):
 
 def compute_pca(data_matrix):
 	from numpy import dot
+	data_category = 'all'
+	U = data_matrix[data_category]['svd']['U']
 	for data_category in data_matrix:
 		data_matrix[data_category]['coefficients'] = {}
-		U = data_matrix[data_category]['svd']['U']
-		S = data_matrix[data_category]['svd']['S']
-		V = data_matrix[data_category]['svd']['V']
+		# U = data_matrix[data_category]['svd']['U']
+		# S = data_matrix[data_category]['svd']['S']
+		# V = data_matrix[data_category]['svd']['V']
 		flux = data_matrix[data_category]['flux']
-		pca_matrix = (S.dot(V)).T #(V.dot(S.T)).T
-		coefficients = (flux.dot(U)).T #(U.T).dot(flux.T)
-		data_matrix[data_category]['pca'] = pca_matrix
+		# pca_matrix = (S.dot(V)).T 
+		coefficients = (flux.dot(U)).T
+		# data_matrix[data_category]['pca'] = pca_matrix
 		data_matrix[data_category]['coefficients']['normal'] = coefficients
 
 def reduce_pca(data_matrix, n = 10):
+	data_category = 'all'
+	U = data_matrix[data_category]['svd']['U']
+	U_reduced = np.zeros(U.shape)
+	for i in range(n):
+		U_reduced[:,i] = U[:,i]
+	data_matrix[data_category]['svd']['U_reduced'] = U_reduced
 	for data_category in data_matrix:
 		flux = data_matrix[data_category]['flux']
-		U = data_matrix[data_category]['svd']['U']
-		U_reduced = np.zeros(U.shape)
-		for i in range(n):
-			U_reduced[:,i] = U[:,i]
+		# U = data_matrix[data_category]['svd']['U']
 		coefficients_reduced = (flux.dot(U_reduced)).T #(U_reduced.T).dot(flux.T)
-		data_matrix[data_category]['svd']['U_reduced'] = U_reduced
+		# data_matrix[data_category]['svd']['U_reduced'] = U_reduced
 		data_matrix[data_category]['coefficients']['reduced'] = coefficients_reduced
 
 def compute_K(data_matrix):
+	data_category = 'all'
+	U = data_matrix[data_category]['svd']['U']
+	U_reduced = data_matrix[data_category]['svd']['U_reduced']
 	for data_category in data_matrix:
 		K_mat = {}
 		coefficients = data_matrix[data_category]['coefficients']['normal']
 		coefficients_reduced = data_matrix[data_category]['coefficients']['reduced']
-		U = data_matrix[data_category]['svd']['U']
-		S = data_matrix[data_category]['svd']['S']
-		V = data_matrix[data_category]['svd']['V']
-		U_reduced = data_matrix[data_category]['svd']['U_reduced']
+		# U = data_matrix[data_category]['svd']['U']
+		# S = data_matrix[data_category]['svd']['S']
+		# V = data_matrix[data_category]['svd']['V']
+		# U_reduced = data_matrix[data_category]['svd']['U_reduced']
 		K = (U.dot(coefficients)).T
 		K_reduced = (U_reduced.dot(coefficients_reduced)).T
 		K_mat['normal'] = K
@@ -141,22 +149,22 @@ def compute_K(data_matrix):
 def save_pca(data_matrix):
 	for data_category in data_matrix:
 		data_filename = data_category + "_pca"
+		if data_category == 'all':
+			convert_HDF5.write(data_category, 'U', data_filename, data_matrix[data_category]['svd']['U'])
+			convert_HDF5.write(data_category, 'U_reduced', data_filename, data_matrix[data_category]['svd']['U_reduced'])
+			convert_HDF5.write(data_category, 'S', data_filename, data_matrix[data_category]['svd']['S'])
+			convert_HDF5.write(data_category, 'V', data_filename, data_matrix[data_category]['svd']['V'])
 		convert_HDF5.write(data_category, 'wavelength', data_filename, data_matrix[data_category]['wavelength'])
 		convert_HDF5.write(data_category, 'flux', data_filename, data_matrix[data_category]['flux'])
 		convert_HDF5.write(data_category, 'keys', data_filename, data_matrix[data_category]['keys'])
-		convert_HDF5.write(data_category, 'U', data_filename, data_matrix[data_category]['svd']['U'])
-		convert_HDF5.write(data_category, 'U_reduced', data_filename, data_matrix[data_category]['svd']['U_reduced'])
-		convert_HDF5.write(data_category, 'S', data_filename, data_matrix[data_category]['svd']['S'])
-		convert_HDF5.write(data_category, 'V', data_filename, data_matrix[data_category]['svd']['V'])
-		convert_HDF5.write(data_category, 'U', data_filename, data_matrix[data_category]['svd']['U'])
 		convert_HDF5.write(data_category, 'coefficients_normal', data_filename, data_matrix[data_category]['coefficients']['normal'])
 		convert_HDF5.write(data_category, 'coefficients_reduced', data_filename, data_matrix[data_category]['coefficients']['reduced'])
 		convert_HDF5.write(data_category, 'K_normal', data_filename, data_matrix[data_category]['K']['normal'])
 		convert_HDF5.write(data_category, 'K_reduced', data_filename, data_matrix[data_category]['K']['reduced'])
 
 
-def run(category = None, data_type = 'log', n = 10):
-	data_matrix = form_matrix(category, data_type)
+def run(category = None, rebin_type = 'log', n = 10):
+	data_matrix = form_matrix(category, rebin_type)
 	normalize(data_matrix)
 	compute_mean(data_matrix)
 	demean(data_matrix)

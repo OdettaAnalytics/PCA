@@ -131,7 +131,7 @@ else:
 	if opts.rebin:
 		rebin.run(min_wave, max_wave, n_rebin, category, rebin_type)
 	if opts.pca:
-		pca.run(category, rebin, n)
+		pca.run(category, rebin_type, n)
 	if opts.plot:
 		if opts.plot.lower() == 'raw':
 			plt.raw(category)

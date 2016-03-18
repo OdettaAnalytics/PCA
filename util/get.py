@@ -19,6 +19,8 @@ def data(data_type, category = None, rebin_type = None, data_file = None):
 			elif data_type == 'raw':
 				data_path += (glob.glob('supernova_data/' + c + '/data/raw_data/*'))
 			elif rebin_type or data_type == 'rebin':
+				if rebin_type == None:
+					rebin_type = 'log'
 				data_path += (glob.glob('supernova_data/' + c + '/data/*' + rebin_type + '*'))
 			else:
 				data_path += (glob.glob('supernova_data/' + c + '/data/*' + data_type + '*'))

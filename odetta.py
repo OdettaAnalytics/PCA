@@ -118,7 +118,7 @@ if not (opts.trim or opts.deredshift or opts.demean or opts.rebin or opts.pca or
 	deredshift.run(category)
 	demean.demean_flux(category)
 	rebin.run(min_wave, max_wave, n_rebin, category, rebin_type)
-	pca.run(category, rebin, n)
+	pca.run(category, rebin_type, n)
 	plt.pcomponents(category, components, legend, save, show)
 else:
 	if opts.trim:

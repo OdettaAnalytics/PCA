@@ -14,9 +14,11 @@ import util.convert_HDF5 as convert_HDF5
 
 def demeaning(flux):
 	mean = np.mean(flux)
-	if (mean > 0):
+	if (mean != 0):
 		demeaned_flux = (flux/mean) - 1
-	return demeaned_flux
+		return demeaned_flux
+	else:
+		return flux
 
 def demean_flux(category = None):
 	data_path = get.data('trim', category)

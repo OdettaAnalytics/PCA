@@ -19,7 +19,7 @@ def demeaning(flux):
 	return demeaned_flux
 
 def demean_flux(category = None):
-	data_path = get.data('deredshift', category)
+	data_path = get.data('trim', category)
 	for data_file in data_path:
 		dataset = h5py.File(data_file, 'r')
 		data_category = data_file.split('/')[1]

@@ -19,15 +19,16 @@ all plots related to the specific supernova
 import os, glob
 import util.get as get
 
-def init(categories):
+def init(category):
 	'''
-	categories: a list of supernova categories
+	category: a list of supernova category
 	'''
-	if type(categories) == str:
-		categories = [categories]
-	for category in categories:
-		if not os.path.isdir('supernova_data/' + category):
-			os.makedirs('supernova_data/' + category)
+	if type(category) == str:
+		category = [category]
+	for c in category:
+		if not os.path.isdir('supernova_data/' + c):
+			os.makedirs('supernova_data/' + c)
+	data(category, kind = 'raw')
 
 def data(category = None, kind = None):
 	'''

@@ -1,21 +1,5 @@
 __author__ = 'Leon liang'
 
-'''
-This Python file will make necessary directories
-that will be used to store all data that other 
-Python files will be locating
-
-init(): creates a initial directory "supernova_data" 
-and a subdirectory for each of the category users want
-analyze
-
-data(): creates a directory inside [category]/data
-to store all data generated from this data analysis
-
-plots(): creates a directory that will be used to store
-all plots related to the specific supernova
-'''
-
 import os, glob
 import util.get as get
 

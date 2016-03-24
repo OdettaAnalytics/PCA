@@ -19,6 +19,7 @@ def raw(category = None):
 		wavelength = spectrum[:,0]
 		flux = spectrum[:,1]
 		plt.figure()
+		plt.grid()
 		plt.plot(wavelength, flux)
 		name = data_name.split('/')[4]
 		plt.title(name)
@@ -39,6 +40,7 @@ def deredshift(category = None):
 			wavelength = dataset[data_name][:, 0]
 			flux = dataset[data_name][:, 1]
 			plt.figure()
+			plt.grid()
 			plt.plot(wavelength, flux)
 			plt.xlabel('wavelength')
 			plt.ylabel('flux')
@@ -58,6 +60,7 @@ def trim(category = None):
 			wavelength = dataset[data_name][:, 0]
 			flux = dataset[data_name][:, 1]
 			plt.figure()
+			plt.grid()
 			plt.plot(wavelength, flux)
 			plt.xlabel('wavelength')
 			plt.ylabel('flux')
@@ -77,6 +80,7 @@ def rebin(category = None, rebin_type = 'log'):
 			wavelength = dataset[data_name][:, 0]
 			flux = dataset[data_name][:, 1]
 			plt.figure()
+			plt.grid()
 			plt.plot(wavelength, flux)
 			plt.xlabel('wavelength')
 			plt.ylabel('flux')
@@ -93,6 +97,7 @@ def coefficients(category = None, rebin_type = 'log', n = 80, legend = True, sav
 		x = np.zeros([100])
 		k = 0
 		plt.figure()
+		plt.grid()
 		for data_file in data_path:
 			data_category = data_file.split('/')[1]
 			dataset = h5py.File(data_file, 'r')	
@@ -122,6 +127,7 @@ def pcomponents(category = None, components = [[0,1]], legend = True, save = Tru
 		plots = []
 		plot_names = []
 		plt.figure()
+		plt.grid()
 		i = component[0]
 		j = component[1]
 		for data_file in data_path:
@@ -170,10 +176,10 @@ def U_matrix(category = None, legend = True, save = True, show = False):
 	for j in range(0,2000,5):
 		plt.figure()
 		plot_names = []
+		offset = 0
 		for k in range(5):
-			p = plt.plot(wavelength, U[:,j+k], color = COLORS[k], label = str(j + k))
-			offset = max(U[:,j+k]) + 0.2
-			plots.append(p)
+			p = plt.plot(wavelength, U[:,j+k] + offset, color = COLORS[k], label = str(j + k))
+			offset += max(U[:,j+k]) + 0.2
 			plot_names.append(str(j + k))
 		plt.grid()
 		plt.xlabel('wavelength')
@@ -211,6 +217,7 @@ def K_reduced(category = None, data_file = None, legend = True, save = True, sho
 		coefficients_reduced = (flux.dot(U_reduced)).T
 		K_reduced = (U_reduced.dot(coefficients_reduced)).T
 		plt.figure()
+		plt.grid()
 		plt.plot(wavelength, flux, label = category)
 		plt.plot(wavelength, K_reduced, label = 'sum(0:' + str(i) + ')', color = 'red')
 		previous_single_K_reduced = 0

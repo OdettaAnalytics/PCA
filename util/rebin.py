@@ -1,13 +1,5 @@
 __author__ = 'Leon Liang'
 
-'''
-This Python file takes processed spectra and interpolates
-to desire number of points based on input, min_wave, and 
-max_wave
-
-Outputs the interpolated spectra into a hdf5 file
-'''
-
 import numpy as np
 from scipy import interpolate
 import h5py
@@ -15,6 +7,21 @@ import util.get as get
 import util.convert_HDF5 as convert_HDF5
 
 def interpolation(min_wave, max_wave, category = None):
+	'''
+	generates the interpolation function
+
+	Parameters
+	----------
+	min_wave : int indicating the minimum wavelength range
+
+	max_wave : int indicating the maximum wavelength range
+
+	category : list of strings of category for rebinning
+
+	Returns
+	-------
+	f_x : list of interpolation functions for eahc of the dataset
+	'''
 	data_path = get.data('demean', category)
 	f_x = {}
 	for data_file in data_path:
@@ -32,6 +39,21 @@ def interpolation(min_wave, max_wave, category = None):
 	return f_x
 
 def run(min_wave = 4000, max_wave = 8000, n_rebin = 2000, category = None, rebin_type = 'log'):
+	'''
+	rebin each of the trimmed data in the category to desired number of points
+
+	Parameters
+	----------
+	min_wave : int indicating the minimum wavelength range
+
+	max_wave : int indicating the maximum wavelength range
+
+	n_rebin : int indicatinng the number of points wanted for rebin
+
+	category : list of strings of category for rebinning
+
+	rebin_type : string indicating the type of rebin wanted (log or linear)
+	'''
 	f_x = interpolation(min_wave, max_wave, category)
 	data_path = get.data('demean', category)
 	for data_file in data_path:

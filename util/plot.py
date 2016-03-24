@@ -13,7 +13,7 @@ COLORS = ['blue', 'green', 'red', 'cyan', 'magenta', 'purple', 'black']
 
 def raw(category = None):
 	data_path = get.data('raw', category)
-	mkdir.plots(category = None, kind = 'raw')
+	mkdir.plots(category = None, data_type = 'raw')
 	for data_name in data_path:
 		spectrum = np.loadtxt(data_name)
 		wavelength = spectrum[:,0]
@@ -32,7 +32,7 @@ def raw(category = None):
 
 def deredshift(category = None):
 	data_path = get.data('deredshift', category)
-	mkdir.plots(category = None, kind = 'deredshift')
+	mkdir.plots(category = None, data_type = 'deredshift')
 	for data_file in data_path:
 		data_category = data_file.split('/')[1]
 		dataset = h5py.File(data_file, 'r')
@@ -52,7 +52,7 @@ def deredshift(category = None):
 
 def trim(category = None):
 	data_path = get.data('trim', category)
-	mkdir.plots(category = None, kind = 'trim')
+	mkdir.plots(category = None, data_type = 'trim')
 	for data_file in data_path:
 		data_category = data_file.split('/')[1]
 		dataset = h5py.File(data_file, 'r')
@@ -72,7 +72,7 @@ def trim(category = None):
 
 def rebin(category = None, rebin_type = 'log'):
 	data_path = get.data('rebin', category)
-	mkdir.plots(category = None, kind = 'rebin_' + rebin_type)
+	mkdir.plots(category = None, dat_type = 'rebin_' + rebin_type)
 	for data_file in data_path:
 		data_category = data_file.split('/')[1]
 		dataset = h5py.File(data_file, 'r')
@@ -92,7 +92,7 @@ def rebin(category = None, rebin_type = 'log'):
 
 def coefficients(category = None, rebin_type = 'log', n = 80, legend = True, save = True, show = False):
 	data_path = get.data('pca', category)
-	mkdir.plots(category = 'all', kind = 'pca/coefficients')
+	mkdir.plots(category = 'all', data_type = 'pca/coefficients')
 	for i in range(n):
 		x = np.zeros([100])
 		k = 0
@@ -121,7 +121,7 @@ def coefficients(category = None, rebin_type = 'log', n = 80, legend = True, sav
 
 def pcomponents(category = None, components = [[0,1]], legend = True, save = True, show = False):
 	data_path = get.data('pca', category)
-	mkdir.plots(category = 'all', kind = 'pca/pcomponents')
+	mkdir.plots(category = 'all', data_type = 'pca/pcomponents')
 	for component in components:
 		k = 0
 		plots = []
@@ -155,8 +155,8 @@ def pcomponents(category = None, components = [[0,1]], legend = True, save = Tru
 
 def U_matrix(category = None, legend = True, save = True, show = False):
 	data_path = get.data('pca', 'all')
-	mkdir.plots(category = 'all', kind = 'pca/U')
-	mkdir.plots(category = 'all', kind = 'pca/individual_U')
+	mkdir.plots(category = 'all', data_type = 'pca/U')
+	mkdir.plots(category = 'all', data_type = 'pca/individual_U')
 	wavelength = np.linspace(4000, 8000, 2000)
 	dataset = h5py.File(data_path[0], 'r')
 	U = dataset['U']
@@ -195,7 +195,7 @@ def U_matrix(category = None, legend = True, save = True, show = False):
 		plt.close()
 
 def K_reduced(category = None, data_file = None, legend = True, save = True, show = False):
-	mkdir.plots('all', 'pca/K_reduced')
+	mkdir.plots(category = 'all', data_type = 'pca/K_reduced')
 	data_path = get.data('pca', 'all')
 	pca_dataset = h5py.File(data_path[0], 'r')
 	specific_spectrum_index = np.where(pca_dataset['keys'][:] == data_file)[0]

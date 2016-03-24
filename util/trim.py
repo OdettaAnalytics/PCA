@@ -1,21 +1,13 @@
 __author__ = 'Leon Liang'
 
-'''
-This Python file processes raw spectra
-and trim it so that the remaining wavelengths will be within
-the min_wave and max_wave inputs
-
-Outputs trimmed spectra into a hdf5 file
-'''
-
 import numpy as np, h5py
 import util.get as get
 import util.convert_HDF5 as convert_HDF5
 
 def run(min_wave = 4000, max_wave = 8000, category = None):
 	'''
-	run() trims all input category based on the minimum and
-	maximum wavelength and ouputs as HDF5 file
+	run() trims all input category's deredshifted data based on 
+	the minimum and maximum wavelength and ouputs as HDF5 file
 
 	Parameters
 	----------

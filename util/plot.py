@@ -48,6 +48,25 @@ def deredshift(category = None):
 			plt.close()
 		dataset.close()
 
+def trim(category = None):
+	data_path = get.data('trim', category)
+	mkdir.plots(category = None, kind = 'trim')
+	for data_file in data_path:
+		data_category = data_file.split('/')[1]
+		dataset = h5py.File(data_file, 'r')
+		for data_name in dataset:
+			wavelength = dataset[data_name][:, 0]
+			flux = dataset[data_name][:, 1]
+			plt.figure()
+			plt.plot(wavelength, flux)
+			plt.xlabel('wavelength')
+			plt.ylabel('flux')
+			plt.title(data_name)
+			filename = 'supernova_data/' + data_category + '/plots/trim/' + data_name + '.eps'
+			plt.savefig(filename, format='eps', dpi = 3500)
+			plt.close()
+		dataset.close()
+
 def rebin(category = None, rebin_type = 'log'):
 	data_path = get.data('rebin', category)
 	mkdir.plots(category = None, kind = 'rebin_' + rebin_type)

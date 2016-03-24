@@ -136,6 +136,8 @@ else:
 			plt.raw(category)
 		elif opts.plot.lower() == 'deredshift':
 			plt.deredshift(category)
+		elif opts.plot.lower() == 'trim':
+			plt.trim(category)
 		elif opts.plot.lower() == 'rebin':
 			plt.rebin(category, rebin_type)
 		elif opts.plot.lower() == 'coefficients':

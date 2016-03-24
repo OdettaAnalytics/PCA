@@ -1,14 +1,27 @@
 __author__ = 'Leon liang'
 
-'''
-This Python file gets all of data using glob
-and returns the data as a list of strings
-that other functions can then utilize
-'''
-
 import glob, sys
 
 def data(data_type, category = None, rebin_type = None, data_file = None):
+	'''
+	data() finds the necessary file paths and returns it as a list
+
+	Parameters
+	----------
+	data_type : string indicating the data type wanted (raw, deredshift, trimmed, etc.)
+
+	category : a list of strings of categories
+			   or a single string of category
+
+	rebin_type : string indicating the type of rebin wanted (log or linear)
+
+	data_file : string of the specific raw data file wanted
+
+	Returns
+	-------
+	data_path : list of strings of paths for the data wanted
+
+	'''
 	if type(category) == str:
 		category = [category]
 	if category is not None:
@@ -38,6 +51,13 @@ def data(data_type, category = None, rebin_type = None, data_file = None):
 			return glob.glob('supernova_data/type*/data/*' + data_type + '*')
 
 def z_value():
+	'''
+	z_value() returns the path of the z value file
+
+	Returns
+	-------
+	z_value : string of the path of the z value file
+	'''
 	z_value = glob.glob('objects_z_values*')
 	if len(z_value) == 0:
 		print 'Cannot find Z value file'
@@ -45,7 +65,14 @@ def z_value():
 	else:
 		return z_value[0]
 
-def types(category = None):
+def types():
+	'''
+	types() returns the available category
+
+	Returns
+	-------
+	types : list of strings of category
+	'''
 	path = glob.glob('supernova_data/type*')
 	types = []
 	for p in path:

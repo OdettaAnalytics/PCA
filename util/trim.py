@@ -13,6 +13,18 @@ import util.get as get
 import util.convert_HDF5 as convert_HDF5
 
 def run(min_wave = 4000, max_wave = 8000, category = None):
+	'''
+	run() trims all input category based on the minimum and
+	maximum wavelength
+
+	Parameters
+	----------
+	min_wave : int indicated minimum wavelength range
+
+	max_wave : int indicated maximum wavelength range
+
+	category : list of categories to trim
+	'''
 	data_path = get.data('deredshift', category)
 	for data_file in data_path:
 		dataset = h5py.File(data_file, 'r')

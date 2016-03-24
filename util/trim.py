@@ -15,7 +15,7 @@ import util.convert_HDF5 as convert_HDF5
 def run(min_wave = 4000, max_wave = 8000, category = None):
 	'''
 	run() trims all input category based on the minimum and
-	maximum wavelength
+	maximum wavelength and ouputs as HDF5 file
 
 	Parameters
 	----------

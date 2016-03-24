@@ -1,19 +1,24 @@
 __author__ = 'Leon Liang'
 
-'''
-This Python file prcesses trimmed spectra and deredshift
-spectra's wavelengths according to the correspond z value
-for its supernova
-
-Outputs deredshifted spectra into a hdf5 file
-'''
-
 import numpy as np, sys
 import util.get as get
 import util.mkdir as mkdir
 import util.convert_HDF5 as convert_HDF5
 
 def extract_z_values(object_z_file):
+	'''
+	extracts z value from the text file
+
+	Parameter
+	---------
+	object_z_file : string of the path to the z value text file
+
+	Returns
+	-------
+	object_names : numpy array of strings of each of the object name
+
+	z_values : numpy array of the z values corresponding to each object name 
+	'''
 	object_zvalues = np.genfromtxt(object_z_file, dtype = 'str')
 	[num_objects, columns] = object_zvalues.shape
 	object_names = object_zvalues[1:, 0]
@@ -23,6 +28,14 @@ def extract_z_values(object_z_file):
 	return object_names, z_values
 
 def run(category = None):
+	'''
+	run() deredshifts all raw data from each category based on 
+	z value found and outputs to HDF5 File
+
+	Parameter
+	---------
+	category : list of category to deredshift
+	'''
 	data_path = get.data('raw', category)
 	object_z_file = get.z_value()
 	object_names, z_values = extract_z_values(object_z_file)

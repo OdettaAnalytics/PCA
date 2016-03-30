@@ -23,7 +23,6 @@ parser.add_option("--rebin", dest = "rebin")
 parser.add_option("--rebin_type", dest = "rebin_type")
 parser.add_option("--pca", dest = "pca")
 parser.add_option("--category", dest = "category")
-parser.add_option("--wave_range", dest = "wave_range")
 parser.add_option("--min_wave", dest = "min_wave")
 parser.add_option("--max_wave", dest = "max_wave")
 parser.add_option("--components", dest = "components")
@@ -88,14 +87,10 @@ if opts.rebin_type:
 		rebin_type = 'linear'
 	else:
 		rebin_type = 'log'
-if opts.wave_range:
-	min_wave = float(opts.wave_range[0])
-	max_wave = float(opts.wave_range[1])
-else:
-	if opts.min_wave:
-		min_wave = float(opts.min_wave)
-	if opts.max_wave:
-		max_wave = float(opts.max_wave)
+if opts.min_wave:
+	min_wave = float(opts.min_wave)
+if opts.max_wave:
+	max_wave = float(opts.max_wave)
 if opts.n_comp:
 	n = int(opts.n_comp)
 if opts.n_rebin:

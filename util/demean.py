@@ -14,11 +14,14 @@ import util.convert_HDF5 as convert_HDF5
 
 def demeaning(flux):
 	mean = np.mean(flux)
-	demeaned_flux = (flux/mean) - 1
-	return demeaned_flux
+	if (mean != 0):
+		demeaned_flux = (flux/mean) - 1
+		return demeaned_flux
+	else:
+		return flux
 
 def demean_flux(category = None):
-	data_path = get.data('deredshift', category)
+	data_path = get.data('trim', category)
 	for data_file in data_path:
 		dataset = h5py.File(data_file, 'r')
 		data_category = data_file.split('/')[1]
@@ -27,25 +30,15 @@ def demean_flux(category = None):
 			spectrum = dataset[data_name][:,:]
 			wavelength = spectrum[:, 0]
 			flux = spectrum[:, 1]
-			# rest_of_spectrum = None
-			[rows, columns] = spectrum.shape
-			more_data = False
-			if columns > 2:
-				more_data = True
-				rest_of_spectrum = spectrum[:, 2:]
 			demeaned_flux = demeaning(flux)
 			demeaned_spectrum = np.vstack([wavelength, demeaned_flux])
-			if (more_data):
-				[rows, columns] = rest_of_spectrum.shape
-				for i in range(columns):
+			[nrows, ncolumns] = spectrum.shape
+			rest_of_spectrum = None
+			if ncolumns > 2:
+				rest_of_spectrum = spectrum[:, 2:]
+				[nrows, ncolumns] = rest_of_spectrum.shape
+				for i in range(ncolumns):
 					demeaned_spectrum = np.vstack([demeaned_spectrum, rest_of_spectrum[:,i]])
 			demeaned_spectrum = demeaned_spectrum.T 
-			data_type = data_category + '_' + 'demean'
-			convert_HDF5.write(data_category, str(data_name), data_type, demeaned_spectrum)
-
-# if __name__ == '__main__':
-# 	demean_flux()
-
-
-
-
+			data_filename = data_category + '_' + 'demean'
+			convert_HDF5.write(data_category, str(data_name), data_filename, demeaned_spectrum)

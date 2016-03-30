@@ -8,17 +8,18 @@ import util.mkdir as mkdir
 import h5py
 import optparse, sys
 
-WARNING = "Please enter the what you want to plot: python ploy.py [raw, interpolates, coefficients]."
+WARNING = "Please enter the what you want to plot: python ploy.py [raw, deredshift, rebin, coefficients, pcomponents, U_matrix, K_reduced]."
 COLORS = ['blue', 'green', 'red', 'cyan', 'magenta', 'purple', 'black']
 
 def raw(category = None):
 	data_path = get.data('raw', category)
-	mkdir.plots(category = None, kind = 'raw')
+	mkdir.plots(category = None, data_type = 'raw')
 	for data_name in data_path:
 		spectrum = np.loadtxt(data_name)
 		wavelength = spectrum[:,0]
 		flux = spectrum[:,1]
 		plt.figure()
+		plt.grid()
 		plt.plot(wavelength, flux)
 		name = data_name.split('/')[4]
 		plt.title(name)
@@ -31,7 +32,7 @@ def raw(category = None):
 
 def deredshift(category = None):
 	data_path = get.data('deredshift', category)
-	mkdir.plots(category = None, kind = 'deredshift')
+	mkdir.plots(category = None, data_type = 'deredshift')
 	for data_file in data_path:
 		data_category = data_file.split('/')[1]
 		dataset = h5py.File(data_file, 'r')
@@ -39,6 +40,7 @@ def deredshift(category = None):
 			wavelength = dataset[data_name][:, 0]
 			flux = dataset[data_name][:, 1]
 			plt.figure()
+			plt.grid()
 			plt.plot(wavelength, flux)
 			plt.xlabel('wavelength')
 			plt.ylabel('flux')
@@ -48,9 +50,9 @@ def deredshift(category = None):
 			plt.close()
 		dataset.close()
 
-def rebin(category = None, rebin_type = 'log'):
-	data_path = get.data('rebin', category)
-	mkdir.plots(category = None, kind = 'rebin_' + rebin_type)
+def trim(category = None):
+	data_path = get.data('trim', category)
+	mkdir.plots(category = None, data_type = 'trim')
 	for data_file in data_path:
 		data_category = data_file.split('/')[1]
 		dataset = h5py.File(data_file, 'r')
@@ -58,6 +60,27 @@ def rebin(category = None, rebin_type = 'log'):
 			wavelength = dataset[data_name][:, 0]
 			flux = dataset[data_name][:, 1]
 			plt.figure()
+			plt.grid()
+			plt.plot(wavelength, flux)
+			plt.xlabel('wavelength')
+			plt.ylabel('flux')
+			plt.title(data_name)
+			filename = 'supernova_data/' + data_category + '/plots/trim/' + data_name + '.eps'
+			plt.savefig(filename, format='eps', dpi = 3500)
+			plt.close()
+		dataset.close()
+
+def rebin(category = None, rebin_type = 'log'):
+	data_path = get.data('rebin', category)
+	mkdir.plots(category = None, dat_type = 'rebin_' + rebin_type)
+	for data_file in data_path:
+		data_category = data_file.split('/')[1]
+		dataset = h5py.File(data_file, 'r')
+		for data_name in dataset:
+			wavelength = dataset[data_name][:, 0]
+			flux = dataset[data_name][:, 1]
+			plt.figure()
+			plt.grid()
 			plt.plot(wavelength, flux)
 			plt.xlabel('wavelength')
 			plt.ylabel('flux')
@@ -69,11 +92,12 @@ def rebin(category = None, rebin_type = 'log'):
 
 def coefficients(category = None, rebin_type = 'log', n = 80, legend = True, save = True, show = False):
 	data_path = get.data('pca', category)
-	mkdir.plots(category = 'all', kind = 'pca/coefficients')
-	for i in range(n + 1):
+	mkdir.plots(category = 'all', data_type = 'pca/coefficients')
+	for i in range(n):
 		x = np.zeros([100])
 		k = 0
 		plt.figure()
+		plt.grid()
 		for data_file in data_path:
 			data_category = data_file.split('/')[1]
 			dataset = h5py.File(data_file, 'r')	
@@ -96,19 +120,20 @@ def coefficients(category = None, rebin_type = 'log', n = 80, legend = True, sav
 		plt.close()
 
 def pcomponents(category = None, components = [[0,1]], legend = True, save = True, show = False):
-	data_path = get.data('pca', 'all')
-	mkdir.plots(category = 'all', kind = 'pca/pcomponents')
+	data_path = get.data('pca', category)
+	mkdir.plots(category = 'all', data_type = 'pca/pcomponents')
 	for component in components:
 		k = 0
 		plots = []
 		plot_names = []
 		plt.figure()
+		plt.grid()
 		i = component[0]
 		j = component[1]
 		for data_file in data_path:
 			data_category = data_file.split('/')[1]
 			dataset = h5py.File(data_file, 'r')	
-			coefficients_reduced = dataset['coefficients_reduced']
+			coefficients_reduced = dataset['coefficients_reduced'][:]
 			cx = coefficients_reduced[i,:]
 			cy = coefficients_reduced[j,:]
 			p = plt.scatter(cx, cy, color = COLORS[k%len(COLORS)], label = category)
@@ -130,16 +155,14 @@ def pcomponents(category = None, components = [[0,1]], legend = True, save = Tru
 
 def U_matrix(category = None, legend = True, save = True, show = False):
 	data_path = get.data('pca', 'all')
-	mkdir.plots(category = 'all', kind = 'pca/U')
-	mkdir.plots(category = 'all', kind = 'pca/individual_U')
+	mkdir.plots(category = 'all', data_type = 'pca/U')
+	mkdir.plots(category = 'all', data_type = 'pca/individual_U')
 	wavelength = np.linspace(4000, 8000, 2000)
 	dataset = h5py.File(data_path[0], 'r')
 	U = dataset['U']
 	for i in range(2000):
 		plt.figure()
 		p = plt.plot(wavelength, U[:,i])
-		# if legend:
-		# 	plt.legend(plot_names, loc='right', bbox_to_anchor = (1.1, 0.2), fancybox = True)
 		plt.grid()
 		plt.xlabel('wavelength')
 		plt.ylabel('U[:,' + str(i) + ']')
@@ -153,10 +176,10 @@ def U_matrix(category = None, legend = True, save = True, show = False):
 	for j in range(0,2000,5):
 		plt.figure()
 		plot_names = []
+		offset = 0
 		for k in range(5):
-			p = plt.plot(wavelength, U[:,j+k], color = COLORS[k], label = str(j + k))
-			offset = max(U[:,j+k]) + 0.2
-			plots.append(p)
+			p = plt.plot(wavelength, U[:,j+k] + offset, color = COLORS[k], label = str(j + k))
+			offset += max(U[:,j+k]) + 0.2
 			plot_names.append(str(j + k))
 		plt.grid()
 		plt.xlabel('wavelength')
@@ -172,7 +195,7 @@ def U_matrix(category = None, legend = True, save = True, show = False):
 		plt.close()
 
 def K_reduced(category = None, data_file = None, legend = True, save = True, show = False):
-	mkdir.plots('all', 'pca/K_reduced')
+	mkdir.plots(category = 'all', data_type = 'pca/K_reduced')
 	data_path = get.data('pca', 'all')
 	pca_dataset = h5py.File(data_path[0], 'r')
 	specific_spectrum_index = np.where(pca_dataset['keys'][:] == data_file)[0]
@@ -194,6 +217,7 @@ def K_reduced(category = None, data_file = None, legend = True, save = True, sho
 		coefficients_reduced = (flux.dot(U_reduced)).T
 		K_reduced = (U_reduced.dot(coefficients_reduced)).T
 		plt.figure()
+		plt.grid()
 		plt.plot(wavelength, flux, label = category)
 		plt.plot(wavelength, K_reduced, label = 'sum(0:' + str(i) + ')', color = 'red')
 		previous_single_K_reduced = 0
@@ -216,71 +240,7 @@ def K_reduced(category = None, data_file = None, legend = True, save = True, sho
 		if save:
 			name = 'supernova_data/all/plots/pca/K_reduced/' + category + '_' + str(i) + '.eps'
 			plt.savefig(name, format='eps', dpi = 3500)
+			np.savetxt('supernova_data/all/plots/pca/K_reduced/' + category + '_coefficients_reduced.txt', coefficients_reduced[:6])
 		if show:
 			plt.show()
 		plt.close()
-
-# parser = optparse.OptionParser()
-# parser.add_option("--rebin_type", dest = "rebin_type")
-# parser.add_option("--category", dest = "category")
-# parser.add_option("--components", dest = "components")
-# parser.add_option("--legend", dest = "legend")
-# parser.add_option("--show", dest = "show")
-# parser.add_option("-s", dest = "save")
-
-# (opts, args) = parser.parse_args()
-
-# if len(args) == 0:
-# 	print WARNING
-# 	sys.exit()
-
-# rebin_type = 'log'
-# if opts.rebin_type:
-# 	if opts.rebin_type == 'linear':
-# 		rebin_type = 'linear'
-
-
-# category = None
-# if opts.category:
-# 	category = opts.category.split('[')[1].split(']')[0].split(',')
-
-# components = [[0,1]]
-# if opts.components:
-# 	pcomps = opts.components.split('[')[1].split(']')[0].split(',')
-# 	if len(pcomps)%2 != 0:
-# 		print 'Please enter an even number of principal components you want to analysis'
-# 		sys.exit()
-# 	else:
-# 		components = []
-# 		for i in range(0, len(pcomps) - 1, 2):
-# 			cx = int(pcomps[i])
-# 			cy = int(pcomps[i + 1])
-# 			components.append([cx, cy])
-
-# show = False
-# if opts.show:
-# 	show = True
-
-# legend = True
-# if opts.legend:
-# 	if opts.legend == 'False':
-# 		legend = False
-
-# save = True
-# if opts.save:
-# 	if opts.save == 'False':
-# 		save = False
-
-# if args[0] == 'raw':
-# 	raw(category)
-# elif args[0] == 'deredshift':
-# 	deredshift(category)
-# elif args[0] == 'rebin':
-# 	rebin(category, rebin_type)
-# elif args[0] == 'coefficients':
-# 	coefficients(category, rebin)
-# elif args[0] == 'pcomponents':
-# 	pcomponents(category, components, legend, save, show)
-# else:
-# 	print 'Incorrect plot type entered. ' + WARNING
-# 	sys.exit()

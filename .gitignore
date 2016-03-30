@@ -1,16 +1,17 @@
 .DS_Store
 README.md~
 .idea/
-WiseRep/supernova_data/*
-WiseRep/supernova_data.tar.gz
-WiseRep/objects_z_values.txt
-WiseRep/data_list.txt
-WiseRep/supernovae_info.txt
-WiseRep/download_data.sh
+supernova_data/*
+supernova_data.tar.gz
+objects_z_values.txt
+data_list.txt
+supernovae_info.txt
+download_data.sh
 *.pyc*
-WiseRep/test.hdf5
+test.hdf5
 Component Plots/
 supernova_data/
-WiseRep/*.eps
-WiseRep/spark_test/
-WiseRep/data_odetta.tar.gz
+*.eps
+spark_test/
+odetta_data.tar.gz
+example_numpy.py

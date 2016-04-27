@@ -52,14 +52,15 @@ def run(category = None):
 			if (name.find(object_names[j]) != -1):
 				z_value = z_values[j]
 				break
-		if z_value is None:
+		if z_value != None:
+			deredshift_wavelength = wavelength/(1 + z_value)
+			deredshift_spectrum = deredshift_wavelength
+			[rows, columns] = rest_of_spectrum.shape
+			for i in range(columns):
+				deredshift_spectrum = np.vstack([deredshift_spectrum, rest_of_spectrum[:,i]])
+			deredshift_spectrum = deredshift_spectrum.T
+			data_filename = data_category + '_' + 'deredshift'
+			convert_HDF5.write(data_category, str(data_name), data_filename, deredshift_spectrum)
+		else:
 			print 'Cannot find z value for ' + str(data_name)
-			sys.exit()
-		deredshift_wavelength = wavelength/(1 + z_value)
-		deredshift_spectrum = deredshift_wavelength
-		[rows, columns] = rest_of_spectrum.shape
-		for i in range(columns):
-			deredshift_spectrum = np.vstack([deredshift_spectrum, rest_of_spectrum[:,i]])
-		deredshift_spectrum = deredshift_spectrum.T
-		data_filename = data_category + '_' + 'deredshift'
-		convert_HDF5.write(data_category, str(data_name), data_filename, deredshift_spectrum)
+			

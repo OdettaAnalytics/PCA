@@ -2,7 +2,10 @@ __author__ = 'Leon Liang'
 
 import numpy as np
 import util.pca as pca
-import matplotlib.pyplot as plt
+try:
+	import matplotlib.pyplot as plt
+except ImportError:
+	print 'Cannot import Matplotlib. Please install Matplotlib before running.'
 import util.get as get
 import util.mkdir as mkdir
 import h5py

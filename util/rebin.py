@@ -1,7 +1,10 @@
 __author__ = 'Leon Liang'
 
 import numpy as np
-from scipy import interpolate
+try:
+	from scipy import interpolate
+except ImportError:
+	print 'Cannot import SciPy. Please install SciPy before running.'
 import h5py
 import util.get as get
 import util.convert_HDF5 as convert_HDF5

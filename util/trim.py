@@ -1,6 +1,13 @@
 __author__ = 'Leon Liang'
 
-import numpy as np, h5py
+try:
+	import numpy as np
+except ImportError:
+	print 'Cannot import NumPy. Please install NumPy before running.'
+try:
+	import h5py
+except ImportError:
+	print 'Cannot import h5py. Please install h5py before running.'
 import util.get as get
 import util.convert_HDF5 as convert_HDF5
 

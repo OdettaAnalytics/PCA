@@ -34,12 +34,12 @@ supernova_types = np.array(glob.glob('type*'))
 # i = 0 # counter
 
 for type_dir in supernova_types:
-	if (os.path.isdir(type_dir)):
-		for dataset in glob.glob('supernova_data/' + type_dir + '/raw_data/*'):
-			for i in range(num_objects):
-				if (dataset.find(objects[i]) != -1):
-					category[i] = type_dir
-					num_spectra[i] += 1
+    if (os.path.isdir(type_dir)):
+        for dataset in glob.glob('supernova_data/' + type_dir + '/raw_data/*'):
+            for i in range(num_objects):
+                if (dataset.find(objects[i]) != -1):
+                    category[i] = type_dir
+                    num_spectra[i] += 1
 
 # finished counting the number of spectra per object
 

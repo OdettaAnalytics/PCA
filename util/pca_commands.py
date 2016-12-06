@@ -79,7 +79,7 @@ plt.plot(wavelength, flux2, label = 'type_Ia')
 # plt.plot(wavelength, flux4, label = 'type_Ib')
 # plt.plot(wavelength, flux5, label = 'type_IIb')
 for i in range(0, 1):
-	plt.plot(wavelength, K_reduced[i,:], label = str(i))
+    plt.plot(wavelength, K_reduced[i,:], label = str(i))
 
 plt.legend()
 plt.show()

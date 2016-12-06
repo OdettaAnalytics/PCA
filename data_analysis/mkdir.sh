@@ -4,11 +4,11 @@ ls -d type_* > types.txt
 
 while IFS=$'\t' read -r type
 do
-	mkdir "$type"'/plots'
-	mkdir "$type"'/plots/resolution'
-	mkdir "$type"'/plots/spectra'
-	mkdir "$type"'/plots/scale'
-	mkdir "$type"'/plots/wavelength'
+    mkdir "$type"'/plots'
+    mkdir "$type"'/plots/resolution'
+    mkdir "$type"'/plots/spectra'
+    mkdir "$type"'/plots/scale'
+    mkdir "$type"'/plots/wavelength'
 
 done < <(paste 'types.txt')
 

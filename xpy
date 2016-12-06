@@ -1,12 +1,32 @@
 #!/usr/bin/python
 import optparse
+import glob
 import sys
 import numpy as np
 import pylab as py
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap, BoundaryNorm
+from matplotlib import rc
+import matplotlib
 
+rc('text', usetex=True)
+matplotlib.rcParams.update({'figure.autolayout': True})
+
+#matplotlib.rcParams['mathtext.fontset'] = 'stix'
+#matplotlib.rcParams['font.family'] = 'STIXGeneral'
+
+#Direct input 
+plt.rcParams['text.latex.preamble']=[r"\usepackage{lmodern}"]
+#Options
+params = {'text.usetex' : True,
+          'font.size' : 22,
+          'font.family' : 'lmodern',
+          'text.latex.unicode': True,
+          }
+plt.rcParams.update(params) 
+
+fig = plt.figure()
 # Data manipulation:
 
 def make_segments(x, y):
@@ -88,13 +108,34 @@ parser.add_option("--math",dest="math")
 parser.add_option("--line",dest="linestyle")
 parser.add_option("--legend",dest="legend")
 parser.add_option("--legendloc",dest="legendloc")
+parser.add_option("--legendtextsize",dest="legend_text_size")
 parser.add_option("--offset",dest="offset")
 parser.add_option("--shift",dest="shift")
 parser.add_option("--color",dest="color")
+parser.add_option("--size",dest="markersize")
+parser.add_option("--cumul",dest="cumul")
+parser.add_option("--skip",dest="n_header", default=0, type=int)
+parser.add_option("--filter",dest="file_name_filter")
+parser.add_option("--add-zero",dest="add_zero", default=0, type=int)
+parser.add_option("--sort-by-col",dest="i_sort", default=0, type=int)
+parser.add_option("--vlines",dest="vline_x")
+
+
 
 (opts, args) = parser.parse_args()
 print args
 
+files = []
+for a in args:
+    fnames = glob.glob(a)
+    for f in fnames:
+        if opts.file_name_filter:
+            if opts.file_name_filter not in f:
+                files.append(f)
+        else:
+            files.append(f)
+args = files
+print args
 n = len(args)
 
 xcol = []
@@ -106,11 +147,16 @@ if (opts.cols):
       # plot multiple columns for a single file
       n = len(col_plot)
       args = args*n
+      xcol = [int(z.split(":")[0])-1 for z in col_plot]
+      ycol = [int(z.split(":")[1])-1 for z in col_plot]
       names = [ "Col %d" % d for d in range(1,n+1) ]
       loc = 0
    elif len(col_plot) == 1 and n == 1 and col_plot[0]=="all":
       data = np.loadtxt(args[0])
-      n = len(data[0, :])-1
+      if opts.cumul:
+          n = len(data[0, :])-1
+      else:
+          n = len(data[0, :])-2
       args = args*n
       xcol = [0]*n
       ycol = range(1, n+1)
@@ -134,17 +180,39 @@ else:
    xcol = [0]*n
    ycol = [1]*n
 
+if (opts.markersize):
+    markersize = int(opts.markersize)
+else: 
+    markersize = 4
 
+if (opts.linestyle):
+    line = opts.linestyle.split(',')
+    if (n > 1 and len(line) == 1):
+        line = line*n
+elif opts.cumul:
+    line = ['o']*(n-1)
+    line.append('-')
 
-if (opts.linestyle): line = opts.linestyle.split(',')
-else: line = ['']*n
+else:
+    line = ['']*n
 
 
 for i in range(n):
-    data = np.loadtxt(args[i])
+    data = np.loadtxt(args[i], skiprows=opts.n_header)
     lin = line[i]
-    x = data[:,xcol[i]]
-    y = data[:,ycol[i]]
+    try:
+        x = data[:,xcol[i]]
+        y = data[:,ycol[i]]
+        if opts.i_sort > 0:
+            ww = np.argsort(data[:, opts.i_sort - 1])
+            x = x[ww]
+            y = y[ww]
+        if opts.add_zero > 0:
+            x = np.append(x, x[-1])
+            y = np.append(y, 1e-99)
+    except IndexError:
+        # if file does not have the desired column
+        continue
     if opts.color:
         color=data[:,int(opts.color)-1]
 
@@ -176,9 +244,9 @@ for i in range(n):
 
     if opts.color:
         colors = [.5,.5,.5,1.0]#np.random.random(len(x))
-	py.scatter(x,y,c=colors)
+	py.scatter(x,y,c=colors, markersize=markersize)
     else:
-        py.plot(x,y,lin)
+        py.plot(x,y,lin, markersize=markersize)
 
 if (opts.log == 'y'): py.yscale('log')
 if (opts.log == 'x'): py.xscale('log')
@@ -199,26 +267,54 @@ if (opts.yrange):
    x2 = float(xx[1])
    py.ylim((x1,x2))
 
-if (opts.xtitle):  py.xlabel(opts.xtitle)
-if (opts.ytitle):  py.ylabel(opts.ytitle)
+if (opts.xtitle):  py.xlabel(opts.xtitle.rstrip('\r\n'))
+if (opts.ytitle):  py.ylabel(opts.ytitle.rstrip('\r\n'))
 
+lsize = 20
 if (opts.legend):
    if (opts.legend == '0'): 
-	names = args
-   else: 
-	names = opts.legend.split(',')
+	   names = args
+   elif (opts.legend == 'topdirs'):
+       names = []
+       for a in args:
+           if len(a.split("/")) > 1:
+               names.append(a.split("/")[-2].replace("_","\_"))
+           else:
+               names.append(a.replace("_","\_"))
+   elif (opts.legend == 'filenames'):
+       names = []
+       for a in args:
+           if len(a.split("/")) > 1:
+               names.append(a.split("/")[-1].split(".")[0].replace("_","\_"))
+           else:
+               names.append(a.split(".")[0].replace("_","\_"))
+   else:
+	   names = opts.legend.split(',')
 
    if (opts.legendloc):
-	loc = np.int(opts.legendloc)
+	    loc = np.int(opts.legendloc)
    else:
-	loc = 0
+	   loc = 0
 
-if names:
-   py.legend(names,loc=loc)
+   if (opts.legend_text_size):
+       lsize = np.int(opts.legend_text_size)
 
-if opts.ofile:
-   plot_name = opts.ofile + '.eps' 
-   plt.savefig(plot_name, format='eps', dpi = 3500)
+if opts.vline_x:
+    try:
+        x_list = [np.float(v) for v in opts.vline_x.split(",")]
+        for this_x in x_list:
+            py.axvline(this_x, color="k", linestyle="dotted", label=str(x))
+    except:
+        print "error in vlines parameter"
+        sys.exit()
+
+if names and len(names) <= 10:
+   py.legend(names,loc=loc, prop={'size':lsize})
+
+
+
+if opts.ofile: 
+   py.savefig(opts.ofile)
 else:
    py.show()
 
